@@ -217,7 +217,7 @@ function FeatureCard({
     >
       <div className="flex items-start gap-4">
         <div className="p-3 rounded-2xl bg-[var(--cream-dark)] group-hover:bg-[var(--peach)] transition-colors duration-300">
-          <Icon className="w-6 h-6 text-[var(--charcoal)]" />
+          <Icon className="w-6 h-6 text-[var(--charcoal)] group-hover:text-white transition-colors duration-300" />
         </div>
         <div className="flex-1">
           <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
@@ -335,7 +335,7 @@ export default function Home() {
       </motion.nav>
 
       {/* Hero Section */}
-      <section ref={heroRef} className="min-h-screen flex items-center pt-24 pb-16 relative">
+      <section ref={heroRef} className="min-h-screen flex items-center pt-32 sm:pt-36 lg:pt-40 pb-16 relative">
         <motion.div
           className="container-wide"
           style={{ opacity: heroOpacity, scale: heroScale }}
@@ -364,7 +364,6 @@ export default function Home() {
                 <br />
                 <span
                   className="italic"
-                  style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
                 >
                   posture guardian
                 </span>
@@ -500,7 +499,6 @@ export default function Home() {
               <br />
               <span
                 className="italic text-[var(--coral)]"
-                style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
               >
                 live at their computers
               </span>
@@ -530,7 +528,6 @@ export default function Home() {
               <br />
               <span
                 className="italic"
-                style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
               >
                 minimal footprint
               </span>
@@ -599,7 +596,6 @@ export default function Home() {
                 <br />
                 <span
                   className="italic"
-                  style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
                 >
                   works
                 </span>
@@ -747,7 +743,6 @@ export default function Home() {
               <br />
               <span
                 className="italic text-[var(--coral)]"
-                style={{ fontFamily: "var(--font-instrument-serif), Georgia, serif" }}
               >
                 posture superhero?
               </span>

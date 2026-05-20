@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&family=Geist+Mono:wght@100..900&display=swap');
 @import "tailwindcss";
 
 /* SpineSpy Landing Page - Warm Organic Tech Aesthetic */
@@ -11,9 +12,9 @@
   /* Warm, inviting palette */
   --cream: #FDF8F3;
   --cream-dark: #F5EDE4;
-  --peach: #FFAD8F;
-  --coral: #FF7B5C;
-  --coral-dark: #E85A3C;
+  --peach: #1702C2;
+  --coral: #1702C2;
+  --coral-dark: #1202A3;
   --charcoal: #2D2A26;
   --charcoal-light: #4A4640;
   --sage: #9DB4A0;
@@ -23,7 +24,7 @@
   --superhero-gold: #FFD700;
   --zombie-green: #7CB342;
 
-  --background: var(--cream);
+  --background: #E3E9FF;
   --foreground: var(--charcoal);
 }
 
@@ -39,8 +40,10 @@
   --color-charcoal-light: var(--charcoal-light);
   --color-sage: var(--sage);
   --color-sage-light: var(--sage-light);
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
+  --font-display: 'DM Sans', sans-serif;
 }
 
 * {
@@ -52,16 +55,20 @@ html {
 }
 
 body {
-  background: var(--cream);
+  background: var(--background);
   color: var(--charcoal);
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-sans);
   overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
 }
 
 /* Custom selection */
 ::selection {
   background: var(--peach);
-  color: var(--charcoal);
+  color: white;
 }
 
 /* Animated gradient background */
@@ -69,8 +76,8 @@ body {
   background:
     radial-gradient(ellipse 80% 50% at 20% -20%, rgba(255, 173, 143, 0.4) 0%, transparent 50%),
     radial-gradient(ellipse 60% 40% at 80% 10%, rgba(157, 180, 160, 0.3) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 30% at 10% 90%, rgba(255, 123, 92, 0.2) 0%, transparent 50%),
-    var(--cream);
+    radial-gradient(ellipse 50% 30% at 10% 90%, rgba(23, 2, 194, 0.2) 0%, transparent 50%),
+    var(--background);
 }
 
 /* Noise texture overlay */
@@ -207,7 +214,7 @@ body {
   background: var(--coral);
   border-color: var(--coral);
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(255, 123, 92, 0.3);
+  box-shadow: 0 10px 30px rgba(23, 2, 194, 0.3);
 }
 
 .btn-primary:hover::before {
