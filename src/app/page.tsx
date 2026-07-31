@@ -423,7 +423,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Monitor className="w-4 h-4 text-[var(--sage)]" />
-                  <span>macOS 10.15+</span>
+                  <span>macOS 15+</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Coffee className="w-4 h-4 text-[var(--peach)]" />
@@ -778,7 +778,7 @@ export default function Home() {
             </div>
 
             <p className="text-sm text-[var(--charcoal-light)]">
-              Requires macOS 10.15+ • Apple Silicon & Intel supported
+              Requires macOS 15+ • Apple Silicon
             </p>
           </motion.div>
         </div>
