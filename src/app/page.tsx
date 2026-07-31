@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import { useRef } from "react";
 
+const DOWNLOAD_URL =
+  "https://github.com/jananadiw/spinespy/releases/latest/download/SpineSpy.dmg";
+
 // Animation variants
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -323,7 +326,8 @@ export default function Home() {
                 <span className="hidden sm:inline">GitHub</span>
               </a>
               <a
-                href="https://github.com/jananadiw/spinespy/releases"
+                href={DOWNLOAD_URL}
+                download="SpineSpy.dmg"
                 className="btn-primary text-sm py-2 px-4"
               >
                 <Download className="w-4 h-4" />
@@ -390,7 +394,8 @@ export default function Home() {
                 className="flex flex-wrap items-center gap-4 mb-8"
               >
                 <a
-                  href="https://github.com/jananadiw/spinespy/releases"
+                  href={DOWNLOAD_URL}
+                  download="SpineSpy.dmg"
                   className="btn-primary"
                 >
                   <Download className="w-5 h-5" />
@@ -754,7 +759,8 @@ export default function Home() {
 
             <div className="flex flex-wrap justify-center items-center gap-4 mb-8">
               <a
-                href="https://github.com/jananadiw/spinespy/releases"
+                href={DOWNLOAD_URL}
+                download="SpineSpy.dmg"
                 className="btn-primary text-lg py-4 px-8"
               >
                 <Download className="w-6 h-6" />
