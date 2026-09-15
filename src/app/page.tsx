@@ -367,14 +367,14 @@ export default function Home() {
               initial="hidden"
               animate="visible"
             >
-              {/* Privacy Badge */}
-              <motion.div variants={fadeInUp} className="mb-6 flex flex-wrap items-center gap-3">
-                <span className="privacy-badge">
-                  <Lock className="w-4 h-4" />
+              {/* Trust badges */}
+              <motion.div variants={fadeInUp} className="hero-trust mb-6 flex flex-wrap items-center gap-2">
+                <span className="trust-badge">
+                  <Lock className="trust-badge-icon" aria-hidden="true" />
                   100% Local Processing
                 </span>
-                <span className="inline-flex items-center gap-2 text-sm font-semibold text-green-800">
-                  <BadgeCheck className="w-6 h-6 shrink-0 fill-current [&>path:last-child]:fill-none [&>path:last-child]:stroke-white" strokeWidth={2.5} aria-hidden="true" />
+                <span className="trust-badge">
+                  <BadgeCheck className="trust-badge-icon fill-current [&>path:last-child]:fill-none [&>path:last-child]:stroke-white" strokeWidth={2.5} aria-hidden="true" />
                   Physio Therapist Approved
                 </span>
               </motion.div>

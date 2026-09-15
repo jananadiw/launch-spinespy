@@ -287,17 +287,27 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Privacy badge */
-.privacy-badge {
-  background: linear-gradient(135deg, var(--sage-light), var(--sage));
-  color: var(--charcoal);
-  padding: 0.5rem 1rem;
-  border-radius: 100px;
-  font-size: 0.85rem;
-  font-weight: 600;
+/* Quiet, consistent trust cues above the hero headline */
+.trust-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 34px;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(53, 89, 71, 0.12);
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.42);
+  color: #355947;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.trust-badge-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
 }
 
 /* Tech stack pills */
