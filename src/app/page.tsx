@@ -17,7 +17,7 @@ import {
   Lock,
   Monitor,
   Star,
-  BadgeCheck,
+  Accessibility,
 } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 import Image from "next/image";
@@ -28,10 +28,10 @@ const DOWNLOAD_URL =
 function ProductIcon({ shrimp = false }: { shrimp?: boolean }) {
   return (
     <Image
-      src={shrimp ? "/images/shrimp.png" : "/images/ferret.png"}
-      alt={shrimp ? "Shrimp" : "Ferret"}
-      width={shrimp ? 1172 : 1040}
-      height={shrimp ? 1342 : 1512}
+      src={shrimp ? "/images/shrimp.webp" : "/images/ferret.webp"}
+      alt=""
+      width={shrimp ? 112 : 89}
+      height={128}
       sizes="96px"
       style={{ display: "inline-block", width: "1.3em", height: "1.3em", objectFit: "contain", verticalAlign: "middle" }}
     />
@@ -449,8 +449,8 @@ export default function Home() {
                   <span>macOS 15+</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <BadgeCheck className="w-4 h-4 text-[var(--peach)]" aria-hidden="true" />
-                  <span>Physical therapist approved</span>
+                  <Accessibility className="w-4 h-4 text-[var(--peach)]" aria-hidden="true" />
+                  <span>Physical therapy-informed</span>
                 </div>
               </motion.div>
             </motion.div>
