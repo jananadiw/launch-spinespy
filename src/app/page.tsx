@@ -10,13 +10,13 @@ import {
   Clock,
   Volume2,
   Pause,
+  Play,
   ChevronDown,
   ChevronRight,
   Cpu,
   Lock,
   Monitor,
   Star,
-  Coffee,
   BadgeCheck,
 } from "lucide-react";
 import { useRef, type ReactNode } from "react";
@@ -367,15 +367,11 @@ export default function Home() {
               initial="hidden"
               animate="visible"
             >
-              {/* Trust badges */}
+              {/* Primary trust badge */}
               <motion.div variants={fadeInUp} className="hero-trust mb-6 flex flex-wrap items-center gap-2">
                 <span className="trust-badge">
                   <Lock className="trust-badge-icon" aria-hidden="true" />
                   100% Local Processing
-                </span>
-                <span className="trust-badge">
-                  <BadgeCheck className="trust-badge-icon fill-current [&>path:last-child]:fill-none [&>path:last-child]:stroke-white" strokeWidth={2.5} aria-hidden="true" />
-                  Physio Therapist Approved
                 </span>
               </motion.div>
 
@@ -392,9 +388,12 @@ export default function Home() {
                   posture guardian
                 </span>
                 <br />
-                <span className="inline-flex items-center gap-3">
-                  in the menubar
-                  <span className="emoji-hero text-5xl"><ProductIcon /></span>
+                <span>
+                  in the{" "}
+                  <span className="inline-flex items-center gap-[0.18em] whitespace-nowrap">
+                    menubar
+                    <span className="emoji-hero text-[0.72em] leading-none"><ProductIcon /></span>
+                  </span>
                 </span>
               </motion.h1>
 
@@ -421,6 +420,10 @@ export default function Home() {
                   <Download className="w-5 h-5" />
                   Download for macOS
                 </a>
+                <a href="#demo" className="btn-secondary">
+                  <Play className="w-5 h-5" aria-hidden="true" />
+                  Watch demo
+                </a>
                 <a
                   href="https://github.com/jananadiw/spinespy"
                   target="_blank"
@@ -435,7 +438,7 @@ export default function Home() {
               {/* Quick Stats */}
               <motion.div
                 variants={fadeInUp}
-                className="flex items-center gap-6 text-sm text-[var(--charcoal-light)]"
+                className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[var(--charcoal-light)]"
               >
                 <div className="flex items-center gap-2">
                   <Star className="w-4 h-4 text-[var(--coral)]" />
@@ -446,8 +449,8 @@ export default function Home() {
                   <span>macOS 15+</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Coffee className="w-4 h-4 text-[var(--peach)]" />
-                  <span>MIT License</span>
+                  <BadgeCheck className="w-4 h-4 text-[var(--peach)]" aria-hidden="true" />
+                  <span>Physical therapist approved</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -507,6 +510,41 @@ export default function Home() {
             <ChevronDown className="w-5 h-5 text-[var(--charcoal-light)] scroll-indicator" />
           </motion.div>
         </motion.div>
+      </section>
+
+      {/* Product Demo */}
+      <section id="demo" aria-labelledby="demo-heading" className="py-16 sm:py-24 relative scroll-mt-24">
+        <div className="container-wide grid lg:grid-cols-[2fr_3fr] items-center gap-8 lg:gap-12">
+          <div className="text-center lg:text-left">
+            <p className="text-base font-semibold tracking-tight text-[var(--coral)] mb-3">
+              70-second product demo
+            </p>
+            <h2 id="demo-heading" className="text-4xl sm:text-5xl font-bold leading-[1.1] mb-6">
+              See SpineSpy in action
+            </h2>
+            <p id="demo-description" className="text-xl text-[var(--charcoal-light)] leading-relaxed">
+              Take a look at SpineSpy running on a Mac. Press play to watch the demo.
+              This recording has no audio.
+            </p>
+          </div>
+          <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-[var(--charcoal)]/10 bg-black shadow-xl">
+            <video
+              controls
+              playsInline
+              preload="none"
+              poster="/images/spinespy-demo-poster.jpg"
+              width={944}
+              height={614}
+              aria-label="SpineSpy product demo"
+              aria-describedby="demo-description"
+              className="block w-full h-auto"
+            >
+              <source src="/videos/spinespy-demo.mp4" type="video/mp4" />
+              Your browser does not support embedded video.{' '}
+              <a href="/videos/spinespy-demo.mp4">Download the SpineSpy demo.</a>
+            </video>
+          </div>
+        </div>
       </section>
 
       {/* Pain Points Section */}
