@@ -10,17 +10,32 @@ import {
   Clock,
   Volume2,
   Pause,
+  Play,
   ChevronDown,
+  ChevronRight,
   Cpu,
   Lock,
   Monitor,
   Star,
-  Coffee,
 } from "lucide-react";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
+import Image from "next/image";
 
 const DOWNLOAD_URL =
   "https://github.com/jananadiw/spinespy/releases/latest/download/SpineSpy.dmg";
+
+function ProductIcon({ shrimp = false }: { shrimp?: boolean }) {
+  return (
+    <Image
+      src={shrimp ? "/images/shrimp.webp" : "/images/ferret.webp"}
+      alt=""
+      width={shrimp ? 112 : 89}
+      height={128}
+      sizes="96px"
+      style={{ display: "inline-block", width: "1.3em", height: "1.3em", objectFit: "contain", verticalAlign: "middle" }}
+    />
+  );
+}
 
 // Animation variants
 const fadeInUp = {
@@ -89,7 +104,7 @@ function MenubarMockup() {
       transition={{ delay: 0.8, duration: 0.6 }}
     >
       <div className="flex items-center gap-3 text-sm text-[var(--charcoal-light)]">
-        <span>Mon 10:32 AM</span>
+        <span>Next capture: 10:32 AM</span>
         <span>|</span>
         <div className="flex items-center gap-2">
           <motion.span
@@ -97,7 +112,7 @@ function MenubarMockup() {
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
           >
-            🦸
+            <ProductIcon />
           </motion.span>
           <span className="font-medium text-[var(--charcoal)]">SpineSpy</span>
         </div>
@@ -140,7 +155,7 @@ function PostureComparison() {
             animate={{ rotate: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            🦸
+            <ProductIcon />
           </motion.span>
         </div>
         <span className="text-lg font-semibold text-[var(--sage)]">Good Posture</span>
@@ -187,7 +202,7 @@ function PostureComparison() {
             animate={{ y: [0, 3, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           >
-            🧟
+            <ProductIcon shrimp />
           </motion.span>
         </div>
         <span className="text-lg font-semibold text-[var(--coral)]">Bad Posture</span>
@@ -245,7 +260,7 @@ function HowItWorksStep({
 }: {
   number: number;
   title: string;
-  description: string;
+  description: ReactNode;
   delay?: number;
 }) {
   return (
@@ -312,7 +327,7 @@ export default function Home() {
         <div className="container-wide">
           <div className="glass-card px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">🦴</span>
+              <span className="text-2xl"><ProductIcon /></span>
               <span className="font-bold text-xl tracking-tight">SpineSpy</span>
             </div>
             <div className="flex items-center gap-4">
@@ -351,10 +366,10 @@ export default function Home() {
               initial="hidden"
               animate="visible"
             >
-              {/* Privacy Badge */}
-              <motion.div variants={fadeInUp} className="mb-6">
-                <span className="privacy-badge">
-                  <Lock className="w-4 h-4" />
+              {/* Primary trust badge */}
+              <motion.div variants={fadeInUp} className="hero-trust mb-6 flex flex-wrap items-center gap-2">
+                <span className="trust-badge">
+                  <Lock className="trust-badge-icon" aria-hidden="true" />
                   100% Local Processing
                 </span>
               </motion.div>
@@ -372,9 +387,12 @@ export default function Home() {
                   posture guardian
                 </span>
                 <br />
-                <span className="inline-flex items-center gap-3">
-                  in the menubar
-                  <span className="emoji-hero text-5xl">🦸</span>
+                <span>
+                  in the{" "}
+                  <span className="inline-flex items-center gap-[0.18em] whitespace-nowrap">
+                    menubar
+                    <span className="emoji-hero text-[0.72em] leading-none"><ProductIcon /></span>
+                  </span>
                 </span>
               </motion.h1>
 
@@ -384,7 +402,7 @@ export default function Home() {
                 className="text-xl text-[var(--charcoal-light)] mb-8 max-w-lg leading-relaxed"
               >
                 SpineSpy takes periodic snapshots to detect bad posture and phone
-                distractions — without keeping your camera always on. Privacy-first,
+                distractions without keeping your camera always on. Privacy-first,
                 runs entirely on your Mac.
               </motion.p>
 
@@ -401,6 +419,10 @@ export default function Home() {
                   <Download className="w-5 h-5" />
                   Download for macOS
                 </a>
+                <a href="#demo" className="btn-secondary">
+                  <Play className="w-5 h-5" aria-hidden="true" />
+                  Watch demo
+                </a>
                 <a
                   href="https://github.com/jananadiw/spinespy"
                   target="_blank"
@@ -415,7 +437,7 @@ export default function Home() {
               {/* Quick Stats */}
               <motion.div
                 variants={fadeInUp}
-                className="flex items-center gap-6 text-sm text-[var(--charcoal-light)]"
+                className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-[var(--charcoal-light)]"
               >
                 <div className="flex items-center gap-2">
                   <Star className="w-4 h-4 text-[var(--coral)]" />
@@ -424,10 +446,6 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <Monitor className="w-4 h-4 text-[var(--sage)]" />
                   <span>macOS 15+</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Coffee className="w-4 h-4 text-[var(--peach)]" />
-                  <span>MIT License</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -487,6 +505,41 @@ export default function Home() {
             <ChevronDown className="w-5 h-5 text-[var(--charcoal-light)] scroll-indicator" />
           </motion.div>
         </motion.div>
+      </section>
+
+      {/* Product Demo */}
+      <section id="demo" aria-labelledby="demo-heading" className="py-16 sm:py-24 relative scroll-mt-24">
+        <div className="container-wide grid lg:grid-cols-[2fr_3fr] items-center gap-8 lg:gap-12">
+          <div className="text-center lg:text-left">
+            <p className="text-base font-semibold tracking-tight text-[var(--coral)] mb-3">
+              70-second product demo
+            </p>
+            <h2 id="demo-heading" className="text-4xl sm:text-5xl font-bold leading-[1.1] mb-6">
+              See SpineSpy in action
+            </h2>
+            <p id="demo-description" className="text-xl text-[var(--charcoal-light)] leading-relaxed">
+              Take a look at SpineSpy running on a Mac. Press play to watch the demo.
+              This recording has no audio.
+            </p>
+          </div>
+          <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-[var(--charcoal)]/10 bg-black shadow-xl">
+            <video
+              controls
+              playsInline
+              preload="none"
+              poster="/images/spinespy-demo-poster.jpg"
+              width={944}
+              height={614}
+              aria-label="SpineSpy product demo"
+              aria-describedby="demo-description"
+              className="block w-full h-auto"
+            >
+              <source src="/videos/spinespy-demo.mp4" type="video/mp4" />
+              Your browser does not support embedded video.{' '}
+              <a href="/videos/spinespy-demo.mp4">Download the SpineSpy demo.</a>
+            </video>
+          </div>
+        </div>
       </section>
 
       {/* Pain Points Section */}
@@ -564,7 +617,7 @@ export default function Home() {
             <FeatureCard
               icon={Volume2}
               title="Smart Alerts"
-              description="Only notifies after 5 consecutive bad snapshots — no false alarm fatigue."
+              description="Only notifies after 5 consecutive bad snapshots. No false alarm fatigue."
               emoji="🔔"
               delay={0.3}
             />
@@ -625,7 +678,7 @@ export default function Home() {
                 <HowItWorksStep
                   number={3}
                   title="Status Update"
-                  description="Menubar icon updates: 🦸 (good) or 🧟 (needs attention). At a glance, always."
+                  description={<>Menubar icon updates: <ProductIcon /> (good) or <ProductIcon shrimp /> (needs attention). At a glance, always.</>}
                   delay={0.3}
                 />
                 <HowItWorksStep
@@ -678,24 +731,24 @@ export default function Home() {
 
               {/* Floating menu mockup */}
               <motion.div
-                className="absolute -right-4 top-1/2 -translate-y-1/2 glass-card p-4 shadow-xl"
+                className="absolute right-0 sm:-right-4 top-1/2 -translate-y-1/2 glass-card w-[350px] max-w-full p-4 shadow-xl"
+                aria-label="SpineSpy control panel preview"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 }}
                 viewport={{ once: true }}
               >
-                <div className="text-sm font-medium mb-3 flex items-center gap-2">
-                  <span className="text-xl">🦸</span> SpineSpy
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-[var(--sage)]">
-                    ✓ Monitoring
-                  </div>
-                  <div className="text-[var(--charcoal-light)]">Interval →</div>
-                  <div className="border-t border-[var(--cream-dark)] my-2" />
-                  <div className="text-[var(--charcoal-light)]">Save Snapshot</div>
-                  <div className="text-[var(--charcoal-light)]">Test Alert</div>
-                  <div className="text-[var(--charcoal-light)]">Quit</div>
+                <div className="space-y-2 text-sm text-[var(--charcoal)]">
+                  <div>Pause Monitoring</div>
+                  <div className="text-xs text-[var(--charcoal-light)] opacity-60">Next capture: 2:50:06 PM</div>
+                  <div className="text-xs text-[var(--charcoal-light)] opacity-60">Camera: Off · FaceTime HD Camera (Display)</div>
+                  <div className="flex items-center justify-between gap-4">Interval <ChevronRight className="w-4 h-4" aria-hidden="true" /></div>
+                  <div className="flex items-center justify-between gap-4">Settings <ChevronRight className="w-4 h-4" aria-hidden="true" /></div>
+                  <div className="border-t border-[var(--charcoal)]/15 my-2" />
+                  <div>Calibrate</div>
+                  <div>Save Snapshot</div>
+                  <div>Test Alert</div>
+                  <div>Quit</div>
                 </div>
               </motion.div>
             </motion.div>
@@ -742,7 +795,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <span className="emoji-hero text-7xl mb-6 inline-block">🦸</span>
+            <span className="emoji-hero text-7xl mb-6 inline-block"><ProductIcon /></span>
             <h2 className="text-4xl sm:text-5xl font-bold mb-6">
               Ready to become a
               <br />
@@ -789,7 +842,7 @@ export default function Home() {
         <div className="container-wide">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">🦴</span>
+              <span className="text-2xl"><ProductIcon /></span>
               <span className="font-bold text-lg">SpineSpy</span>
             </div>
 
@@ -819,7 +872,7 @@ export default function Home() {
             </div>
 
             <div className="text-sm text-[var(--charcoal-light)]">
-              Made with 🦴 for better posture
+              Made with <ProductIcon /> for better posture
             </div>
           </div>
         </div>
