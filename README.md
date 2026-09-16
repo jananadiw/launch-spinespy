@@ -9,6 +9,8 @@
 - Tailwind CSS
 - Framer Motion
 
+Project decisions are recorded in [decisions.md](decisions.md).
+
 ## Getting Started
 
 ```bash
