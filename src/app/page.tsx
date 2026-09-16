@@ -17,7 +17,6 @@ import {
   Lock,
   Monitor,
   Star,
-  Accessibility,
 } from "lucide-react";
 import { useRef, type ReactNode } from "react";
 import Image from "next/image";
@@ -447,10 +446,6 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <Monitor className="w-4 h-4 text-[var(--sage)]" />
                   <span>macOS 15+</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Accessibility className="w-4 h-4 text-[var(--peach)]" aria-hidden="true" />
-                  <span>Physical therapy-informed</span>
                 </div>
               </motion.div>
             </motion.div>
