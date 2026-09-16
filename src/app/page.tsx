@@ -104,7 +104,7 @@ function MenubarMockup() {
       transition={{ delay: 0.8, duration: 0.6 }}
     >
       <div className="flex items-center gap-3 text-sm text-[var(--charcoal-light)]">
-        <span>Mon 10:32 AM</span>
+        <span>Next capture: 10:32 AM</span>
         <span>|</span>
         <div className="flex items-center gap-2">
           <motion.span
