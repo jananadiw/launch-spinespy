@@ -448,7 +448,7 @@ export default function Home() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1 }}
                 >
-                  🦥
+                  <ProductIcon />
                 </motion.span>
 
                 {/* Floating feature hints */}
