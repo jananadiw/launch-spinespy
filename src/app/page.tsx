@@ -13,7 +13,6 @@ import {
   Play,
   ChevronDown,
   ChevronRight,
-  Cpu,
   Lock,
   Monitor,
   Star,
@@ -240,7 +239,7 @@ function FeatureCard({
         <div className="flex-1">
           <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
             {title}
-            {emoji && <span className="text-xl">{emoji}</span>}
+            {emoji && <span className="text-xl" aria-hidden="true">{emoji}</span>}
           </h3>
           <p className="text-[var(--charcoal-light)] leading-relaxed">
             {description}
@@ -282,21 +281,6 @@ function HowItWorksStep({
   );
 }
 
-// Tech Stack Badge
-function TechBadge({ name, delay = 0 }: { name: string; delay?: number }) {
-  return (
-    <motion.span
-      className="tech-pill"
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3, delay }}
-      viewport={{ once: true }}
-    >
-      {name}
-    </motion.span>
-  );
-}
-
 export default function Home() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -325,7 +309,7 @@ export default function Home() {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         <div className="container-wide">
-          <div className="glass-card px-6 py-3 flex items-center justify-between">
+          <div className="glass-card px-4 sm:px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-2xl"><ProductIcon /></span>
               <span className="font-bold text-xl tracking-tight">SpineSpy</span>
@@ -335,7 +319,7 @@ export default function Home() {
                 href="https://github.com/jananadiw/spinespy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-[var(--charcoal-light)] hover:text-[var(--charcoal)] transition-colors"
+                className="hidden sm:flex items-center gap-2 text-[var(--charcoal-light)] hover:text-[var(--charcoal)] transition-colors"
               >
                 <Github className="w-5 h-5" />
                 <span className="hidden sm:inline">GitHub</span>
@@ -343,7 +327,7 @@ export default function Home() {
               <a
                 href={DOWNLOAD_URL}
                 download="SpineSpy.dmg"
-                className="btn-primary text-sm py-2 px-4"
+                className="btn-primary text-sm py-2 px-3 sm:px-4"
               >
                 <Download className="w-4 h-4" />
                 Download
@@ -379,20 +363,11 @@ export default function Home() {
                 variants={fadeInUp}
                 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6"
               >
-                Your AI
-                <br />
-                <span
-                  className="italic"
-                >
-                  posture guardian
-                </span>
-                <br />
-                <span>
-                  in the{" "}
-                  <span className="inline-flex items-center gap-[0.18em] whitespace-nowrap">
-                    menubar
-                    <span className="emoji-hero text-[0.72em] leading-none"><ProductIcon /></span>
-                  </span>
+                Catch the slouch
+                <br className="hidden sm:block" />
+                <span className="italic"> before your back does</span>
+                <span className="block mt-2 text-[0.58em] leading-tight text-[var(--charcoal-light)]">
+                  — local, in the menubar.
                 </span>
               </motion.h1>
 
@@ -401,9 +376,9 @@ export default function Home() {
                 variants={fadeInUp}
                 className="text-xl text-[var(--charcoal-light)] mb-8 max-w-lg leading-relaxed"
               >
-                SpineSpy takes periodic snapshots to detect bad posture and phone
-                distractions without keeping your camera always on. Privacy-first,
-                runs entirely on your Mac.
+                SpineSpy checks your posture in short intervals, then stays out of
+                the way. It waits for a pattern — five bad snapshots in a row —
+                before it nudges you.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -445,7 +420,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Monitor className="w-4 h-4 text-[var(--sage)]" />
-                  <span>macOS 15+</span>
+                  <span>macOS 15+ · Apple Silicon</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -543,7 +518,7 @@ export default function Home() {
       </section>
 
       {/* Pain Points Section */}
-      <section className="py-24 relative">
+      <section className="py-16 sm:py-24 relative">
         <div className="container-wide">
           <motion.div
             className="text-center max-w-3xl mx-auto mb-16"
@@ -572,7 +547,7 @@ export default function Home() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-24 relative">
+      <section className="py-16 sm:py-24 relative">
         <div className="container-wide">
           <motion.div
             className="text-center max-w-2xl mx-auto mb-16"
@@ -596,14 +571,14 @@ export default function Home() {
             <FeatureCard
               icon={Eye}
               title="Posture Detection"
-              description="Uses MediaPipe Pose to detect slouching forward and side tilting. No always-on surveillance."
+              description="Spots forward slouch and side tilt from single frames — not a continuous camera feed."
               emoji="👀"
               delay={0}
             />
             <FeatureCard
               icon={Smartphone}
               title="Phone Spotting"
-              description="YOLOv8 object detection catches when you reach for distractions during focus time."
+              description="Notices when you reach for your phone during focus time, without recording a continuous video of your desk."
               emoji="📱"
               delay={0.1}
             />
@@ -630,9 +605,9 @@ export default function Home() {
             />
             <FeatureCard
               icon={Shield}
-              title="Privacy First"
-              description="All processing happens locally on your Mac. No data ever leaves your device."
-              emoji="🔒"
+              title="Open by Design"
+              description="Inspect the code, verify how detection works, or adapt it. MIT-licensed and built for Apple Silicon Macs."
+              emoji="↗"
               delay={0.5}
             />
           </div>
@@ -640,7 +615,7 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 relative">
+      <section className="py-16 sm:py-24 relative">
         <div className="container-wide">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -671,8 +646,8 @@ export default function Home() {
                 />
                 <HowItWorksStep
                   number={2}
-                  title="AI Analysis"
-                  description="MediaPipe analyzes your posture. YOLOv8 checks for phones. Camera closes immediately."
+                  title="Local Analysis"
+                  description="The frame is checked on your Mac for slouching and phone use. The camera closes immediately."
                   delay={0.2}
                 />
                 <HowItWorksStep
@@ -704,28 +679,42 @@ export default function Home() {
                   <div className="macos-btn macos-btn-minimize" />
                   <div className="macos-btn macos-btn-maximize" />
                 </div>
-                <div className="p-6 text-white font-mono text-sm leading-relaxed">
-                  <div className="text-gray-500 mb-2">$ python menubar_app.py</div>
-                  <div className="text-green-400 mb-1">[INFO] Downloading pose model...</div>
-                  <div className="text-green-400 mb-1">[INFO] Model loaded successfully</div>
-                  <div className="text-blue-400 mb-1">[DEBUG] Pose detected: 1 people</div>
-                  <div className="text-gray-300 mb-1">
-                    &nbsp;&nbsp;forward_lean=0.042 tilt=0.018
+                <div className="p-6 text-white text-sm leading-relaxed">
+                  <div className="flex items-center justify-between mb-5">
+                    <span className="font-semibold">Recent posture checks</span>
+                    <span className="text-xs text-gray-400">Camera off</span>
                   </div>
-                  <div className="text-green-400 mb-1">[RESULT] Good posture ✓</div>
-                  <div className="text-gray-500 mb-1">---</div>
-                  <div className="text-blue-400 mb-1">[DEBUG] Pose detected: 1 people</div>
-                  <div className="text-gray-300 mb-1">
-                    &nbsp;&nbsp;forward_lean=0.156 tilt=0.032
+                  <div className="space-y-3 font-mono">
+                    <div className="flex items-center justify-between text-gray-300">
+                      <span>10:24</span>
+                      <span className="text-green-400">Good posture</span>
+                    </div>
+                    <div className="flex items-center justify-between text-gray-300">
+                      <span>10:26</span>
+                      <span className="text-yellow-400">Slouch · 1/5</span>
+                    </div>
+                    <div className="flex items-center justify-between text-gray-300">
+                      <span>10:28</span>
+                      <span className="text-yellow-400">Slouch · 2/5</span>
+                    </div>
+                    <div className="flex items-center justify-between text-gray-300">
+                      <span>10:30</span>
+                      <span className="text-yellow-400">Slouch · 3/5</span>
+                    </div>
+                    <div className="flex items-center justify-between text-gray-300">
+                      <span>10:32</span>
+                      <span className="text-yellow-400">Slouch · 4/5</span>
+                    </div>
+                    <div className="flex items-center justify-between rounded-lg bg-white/10 px-3 py-2 text-white">
+                      <span>10:34</span>
+                      <span className="text-[var(--sage-light)]">Reminder sent · 5/5</span>
+                    </div>
                   </div>
-                  <div className="text-yellow-400 mb-1">[RESULT] Slouching (streak: 1/5)</div>
                   <motion.div
-                    className="inline-block"
+                    className="mt-5 h-1 rounded-full bg-[var(--sage)]"
                     animate={{ opacity: [1, 0, 1] }}
                     transition={{ duration: 1, repeat: Infinity }}
-                  >
-                    <span className="text-white">_</span>
-                  </motion.div>
+                  />
                 </div>
               </div>
 
@@ -756,37 +745,75 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tech Stack Section */}
-      <section className="py-24 relative">
+      {/* Privacy Section */}
+      <section className="py-16 sm:py-24 relative">
         <div className="container-wide">
           <motion.div
-            className="glass-card p-12 text-center"
+            className="privacy-panel p-6 sm:p-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <Cpu className="w-8 h-8 text-[var(--coral)]" />
-              <h2 className="text-3xl font-bold">Powered by Modern AI</h2>
+            <div className="max-w-2xl mb-10">
+              <span className="trust-badge mb-5">
+                <Lock className="trust-badge-icon" aria-hidden="true" />
+                Privacy, in plain terms
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-bold mb-4">
+                One frame, then the camera closes.
+              </h2>
+              <p className="text-xl text-[var(--charcoal-light)]">
+                No continuous feed. No cloud processing. You control every check.
+              </p>
             </div>
-            <p className="text-[var(--charcoal-light)] mb-8 max-w-xl mx-auto">
-              Built with battle-tested computer vision libraries for reliable,
-              efficient detection.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <TechBadge name="OpenCV" delay={0} />
-              <TechBadge name="MediaPipe" delay={0.1} />
-              <TechBadge name="YOLOv8" delay={0.2} />
-              <TechBadge name="Python" delay={0.3} />
-              <TechBadge name="rumps" delay={0.4} />
+
+            <div className="grid md:grid-cols-2">
+              <div className="privacy-fact md:border-r">
+                <Clock className="w-6 h-6" />
+                <div>
+                  <h3>When does it open?</h3>
+                  <p>Only at the interval you choose: 30 seconds, 1, 2, or 5 minutes.</p>
+                </div>
+              </div>
+              <div className="privacy-fact">
+                <Eye className="w-6 h-6" />
+                <div>
+                  <h3>For how long?</h3>
+                  <p>Long enough to capture one frame. The camera closes as soon as the check is done.</p>
+                </div>
+              </div>
+              <div className="privacy-fact md:border-r md:border-b-0">
+                <Lock className="w-6 h-6" />
+                <div>
+                  <h3>What leaves your Mac?</h3>
+                  <p>Nothing. Video, snapshots, and posture results are never uploaded.</p>
+                </div>
+              </div>
+              <div className="privacy-fact border-b-0">
+                <Pause className="w-6 h-6" />
+                <div>
+                  <h3>How do I stop it?</h3>
+                  <p>Open SpineSpy in the menubar and pause monitoring with one click.</p>
+                </div>
+              </div>
             </div>
+
+            <a
+              href="https://github.com/jananadiw/spinespy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-8 font-semibold hover:text-[var(--coral)] transition-colors"
+            >
+              <Github className="w-5 h-5" />
+              Verify it in the open-source code
+            </a>
           </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 relative">
+      <section className="py-16 sm:py-24 relative">
         <div className="container-wide">
           <motion.div
             className="text-center max-w-3xl mx-auto"
@@ -797,17 +824,13 @@ export default function Home() {
           >
             <span className="emoji-hero text-7xl mb-6 inline-block"><ProductIcon /></span>
             <h2 className="text-4xl sm:text-5xl font-bold mb-6">
-              Ready to become a
+              Better posture,
               <br />
-              <span
-                className="italic text-[var(--coral)]"
-              >
-                posture superhero?
-              </span>
+              <span className="italic text-[var(--coral)]">one quiet nudge at a time.</span>
             </h2>
             <p className="text-xl text-[var(--charcoal-light)] mb-10">
-              Download SpineSpy and start taking care of your spine today.
-              It&apos;s free, open source, and respects your privacy.
+              Download SpineSpy for macOS. It&apos;s free, open source, and built to
+              keep your camera data on your Mac.
             </p>
 
             <div className="flex flex-wrap justify-center items-center gap-4 mb-8">

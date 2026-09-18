@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SpineSpy: AI Posture & Focus Monitor for macOS",
+  title: "SpineSpy — Catch the slouch before your back does",
   description:
-    "An AI-powered menubar app that monitors your posture and detects phone distractions. Privacy-first with all processing done locally on your Mac.",
+    "A local macOS menubar app that catches slouching and phone distractions with brief camera checks. Nothing is uploaded.",
   keywords: [
     "posture",
     "ergonomics",
@@ -18,16 +18,16 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "SpineSpy" }],
   openGraph: {
-    title: "SpineSpy: AI Posture & Focus Monitor for macOS",
+    title: "SpineSpy — Catch the slouch before your back does",
     description:
-      "Monitor your posture and stay focused with AI-powered detection. Privacy-first, runs entirely on your Mac.",
+      "Brief posture checks, smart consecutive alerts, and no camera data leaving your Mac.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "SpineSpy: AI Posture & Focus Monitor for macOS",
+    title: "SpineSpy — Catch the slouch before your back does",
     description:
-      "Monitor your posture and stay focused with AI-powered detection. Privacy-first, runs entirely on your Mac.",
+      "Brief posture checks, smart consecutive alerts, and no camera data leaving your Mac.",
   },
 };
 
