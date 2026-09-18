@@ -239,7 +239,7 @@ function FeatureCard({
         <div className="flex-1">
           <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
             {title}
-            {emoji && <span className="text-xl">{emoji}</span>}
+            {emoji && <span className="text-xl" aria-hidden="true">{emoji}</span>}
           </h3>
           <p className="text-[var(--charcoal-light)] leading-relaxed">
             {description}
@@ -377,7 +377,7 @@ export default function Home() {
                 className="text-xl text-[var(--charcoal-light)] mb-8 max-w-lg leading-relaxed"
               >
                 SpineSpy checks your posture in short intervals, then stays out of
-                the way. It waits for a pattern — five slouched snapshots in a row —
+                the way. It waits for a pattern — five bad snapshots in a row —
                 before it nudges you.
               </motion.p>
 
@@ -420,7 +420,7 @@ export default function Home() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Monitor className="w-4 h-4 text-[var(--sage)]" />
-                  <span>Apple Silicon</span>
+                  <span>macOS 15+ · Apple Silicon</span>
                 </div>
               </motion.div>
             </motion.div>
