@@ -441,16 +441,6 @@ export default function Home() {
               <div className="relative flex justify-center">
                 <SpineIllustration className="w-32 h-64 text-[var(--coral)] opacity-20" />
 
-                <motion.span
-                  aria-hidden="true"
-                  className="absolute -top-5 left-6 text-5xl emoji-hero"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1 }}
-                >
-                  <ProductIcon />
-                </motion.span>
-
                 {/* Floating feature hints */}
                 <motion.div
                   className="absolute top-0 right-0 glass-card p-3 text-sm"
