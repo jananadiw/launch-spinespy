@@ -21,7 +21,7 @@ import { useRef, type ReactNode } from "react";
 import Image from "next/image";
 
 const DOWNLOAD_URL =
-  "https://github.com/jananadiw/spinespy/releases/download/v1.3.2/SpineSpy.dmg";
+  "https://github.com/jananadiw/spinespy/releases/download/v1.3.3/SpineSpy.dmg";
 
 function ProductIcon({ shrimp = false }: { shrimp?: boolean }) {
   return (
