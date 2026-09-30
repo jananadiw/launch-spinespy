@@ -17,7 +17,15 @@ const display = Newsreader({
   display: "swap",
 });
 
+const socialImage = {
+  url: "/images/posture-good.jpg",
+  width: 740,
+  height: 390,
+  alt: "SpineSpy menubar notification: Sitting nice and straight.",
+};
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://launch-spinespy.vercel.app"),
   title: "SpineSpy | Catch the slouch before your back does",
   description:
     "A local macOS menubar app that catches slouching and phone distractions with brief camera checks. Nothing is uploaded.",
@@ -34,16 +42,18 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "SpineSpy" }],
   openGraph: {
-    title: "SpineSpy |Catch the slouch before your back does",
+    title: "SpineSpy | Catch the slouch before your back does",
     description:
       "Brief posture checks, smart consecutive alerts, and no camera data leaving your Mac.",
     type: "website",
+    images: [socialImage],
   },
   twitter: {
     card: "summary_large_image",
     title: "SpineSpy | Catch the slouch before your back does",
     description:
       "Brief posture checks, smart consecutive alerts, and no camera data leaving your Mac.",
+    images: [socialImage.url],
   },
 };
 
