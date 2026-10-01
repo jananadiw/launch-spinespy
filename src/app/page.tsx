@@ -59,7 +59,7 @@ const steps = [
   {
     title: "Periodic snapshots",
     description:
-      "On the interval you set — 30 seconds, 1, 2, or 5 minutes — SpineSpy opens the camera.",
+      "SpineSpy opens the camera on the interval you set: 10 minutes, 20 minutes, 30 minutes, or 1 hour.",
   },
   {
     title: "Local analysis",
