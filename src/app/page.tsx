@@ -423,6 +423,56 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section-rule py-16 sm:py-24" aria-labelledby="faq-heading">
+        <div className="container-wide max-w-3xl">
+          <h2 id="faq-heading" className="text-4xl sm:text-5xl font-semibold leading-[1.1] mb-10">
+            Frequently asked questions
+          </h2>
+          <div className="space-y-3">
+            <details className="faq-item group">
+              <summary className="faq-question">
+                Does the camera stay on?
+              </summary>
+              <div className="faq-answer">
+                No. It opens for one frame, then closes.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                Does anything leave my Mac?
+              </summary>
+              <div className="faq-answer">
+                No. The check runs on your Mac. Nothing is uploaded.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                How often does it check?
+              </summary>
+              <div className="faq-answer">
+                You pick 10, 20, or 30 minutes, or 1 hour.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                When does it nudge you?
+              </summary>
+              <div className="faq-answer">
+                After five bad snapshots in a row. One reminder, then it waits.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                Is SpineSpy a local macOS posture app?
+              </summary>
+              <div className="faq-answer">
+                Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
       <footer className="section-rule py-10">
         <div className="container-wide flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-3">
