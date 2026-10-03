@@ -1,4 +1,4 @@
-export const PRODUCTION_SITE_URL = "https://www.spinespy.com/";
+export const PRODUCTION_SITE_URL = "https://www.spinespy.com";
 
 export const PRODUCTION_SITE_ORIGIN = "https://www.spinespy.com";
 
