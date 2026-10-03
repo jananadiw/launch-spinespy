@@ -18,9 +18,9 @@ const display = Newsreader({
 });
 
 const socialImage = {
-  url: "/images/posture-good.jpg",
-  width: 740,
-  height: 390,
+  url: "/images/posture-good.png",
+  width: 928,
+  height: 480,
   alt: "SpineSpy menubar notification: Sitting nice and straight.",
 };
 

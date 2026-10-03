@@ -212,10 +212,10 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.15 }}
           >
             <Image
-              src="/images/menubar-menu.jpg"
-              alt="SpineSpy menubar menu showing Pause Monitoring, the next capture time, and Camera off."
-              width={600}
-              height={568}
+              src="/images/welcome.jpg"
+              alt="Welcome to SpineSpy. Pick what you need help with, and how often it should check in."
+              width={894}
+              height={1024}
               priority
               className="block w-full h-auto"
             />
@@ -244,8 +244,8 @@ export default function Home() {
               playsInline
               preload="metadata"
               poster="/images/spinespy-demo-poster.jpg"
-              width={944}
-              height={614}
+              width={1588}
+              height={1080}
               aria-label="SpineSpy product demo. This video has no audio."
               aria-describedby="demo-description"
               className="block w-full h-auto"
@@ -270,14 +270,26 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <figure className="mx-auto mb-8 max-w-lg min-w-0">
+            <div className="product-frame">
+              <Image
+                src="/images/menubar-menu.png"
+                alt="SpineSpy open in the menu bar: Pause Monitoring, the next capture time, camera off, and Interval, Settings, Calibrate, Save Snapshot, Test Alert, and Quit."
+                width={702}
+                height={614}
+                className="block w-full h-auto"
+              />
+            </div>
+            <figcaption className="mt-3 text-sm font-semibold">Menubar</figcaption>
+          </figure>
+          <div className="grid md:grid-cols-2 gap-6 md:items-start">
             <figure className="min-w-0">
               <div className="product-frame">
                 <Image
-                  src="/images/posture-good.jpg"
-                  alt="Menubar notification: Sitting nice and straight, with the ferret icon."
-                  width={740}
-                  height={390}
+                  src="/images/posture-good.png"
+                  alt="Notification: Sitting nice and straight, with the ferret in the menu bar."
+                  width={928}
+                  height={480}
                   className="block w-full h-auto"
                 />
               </div>
@@ -286,10 +298,10 @@ export default function Home() {
             <figure className="min-w-0">
               <div className="product-frame">
                 <Image
-                  src="/images/posture-shrimp.jpg"
-                  alt="Menubar notification: You're being a shrimp, my friend, with the shrimp icon."
-                  width={740}
-                  height={390}
+                  src="/images/posture-shrimp.png"
+                  alt="Notification: You're being a shrimp, my friend, with the shrimp in the menu bar."
+                  width={898}
+                  height={400}
                   className="block w-full h-auto"
                 />
               </div>
