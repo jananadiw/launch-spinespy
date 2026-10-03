@@ -20,6 +20,6 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: `${PRODUCTION_SITE_URL}sitemap.xml`,
+    sitemap: `${PRODUCTION_SITE_URL}/sitemap.xml`,
   };
 }
