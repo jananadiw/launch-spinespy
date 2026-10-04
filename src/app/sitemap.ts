@@ -5,7 +5,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: PRODUCTION_SITE_URL,
-      lastModified: new Date().toISOString(),
+      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
