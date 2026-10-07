@@ -270,21 +270,20 @@ export default function Home() {
             </p>
           </div>
 
-          <figure className="mx-auto mb-8 max-w-lg min-w-0">
-            <div className="product-frame">
-              <Image
-                src="/images/menubar-menu.png"
-                alt="SpineSpy open in the menu bar: Pause Monitoring, the next capture time, camera off, and Interval, Settings, Calibrate, Save Snapshot, Test Alert, and Quit."
-                width={702}
-                height={614}
-                className="block w-full h-auto"
-              />
-            </div>
-            <figcaption className="mt-3 text-sm font-semibold">Menubar</figcaption>
-          </figure>
-          <div className="grid md:grid-cols-2 gap-6 md:items-start">
-            <figure className="min-w-0">
+          <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-[1.2fr_1fr]">
+            <figure className="min-w-0 md:row-span-2">
               <div className="product-frame">
+                <Image
+                  src="/images/menubar-menu.png"
+                  alt="SpineSpy open in the menu bar: Pause Monitoring, the next capture time, camera off, and Interval, Settings, Calibrate, Save Snapshot, Test Alert, and Quit."
+                  width={702}
+                  height={614}
+                  className="block w-full h-auto"
+                />
+              </div>
+            </figure>
+            <figure className="min-w-0">
+              <div className="product-frame posture-frame">
                 <Image
                   src="/images/posture-good.png"
                   alt="Notification: Sitting nice and straight, with the ferret in the menu bar."
@@ -293,10 +292,9 @@ export default function Home() {
                   className="block w-full h-auto"
                 />
               </div>
-              <figcaption className="mt-3 text-sm font-semibold">Straight</figcaption>
             </figure>
             <figure className="min-w-0">
-              <div className="product-frame">
+              <div className="product-frame posture-frame">
                 <Image
                   src="/images/posture-shrimp.png"
                   alt="Notification: You're being a shrimp, my friend, with the shrimp in the menu bar."
@@ -305,7 +303,6 @@ export default function Home() {
                   className="block w-full h-auto"
                 />
               </div>
-              <figcaption className="mt-3 text-sm font-semibold">Shrimp</figcaption>
             </figure>
           </div>
           <p className="mt-6 max-w-xl text-[var(--ink-muted)]">
