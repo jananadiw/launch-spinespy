@@ -57,7 +57,11 @@ export async function generateMetadata(): Promise<Metadata> {
       "focus",
       "computer vision",
     ],
+    applicationName: "SpineSpy",
     authors: [{ name: "SpineSpy" }],
+    appleWebApp: {
+      title: "SpineSpy",
+    },
     alternates: {
       canonical: PRODUCTION_SITE_URL,
     },

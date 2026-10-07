@@ -7,3 +7,4 @@
 - Mascot appears once, in the footer. View source sits under the GitHub nav link. Revisit if the wordmark changes.
 - Privacy is an open → one frame → close diagram. Revisit if camera behavior changes.
 - Demo stays below the hero: local MP4, poster, muted autoplay once the video is in view. Revisit when the recording changes.
+- `launch-spinespy.vercel.app` redirects to `https://www.spinespy.com`. Shared previews were labeling the page Vercel because the link host is `vercel.app`. Revisit if the Vercel project alias changes.
