@@ -17,7 +17,7 @@ import {
   SPINESPY_PRICE_USD,
 } from "@/lib/site";
 
-const BUY_CTA_LABEL = `Buy SpineSpy, $${SPINESPY_PRICE_USD}`;
+const BUY_CTA_LABEL = `Unlock Pro · $${SPINESPY_PRICE_USD} once`;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -124,7 +124,7 @@ export default function Home() {
             >
               <ShoppingBag className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">{BUY_CTA_LABEL}</span>
-              <span className="sm:hidden">Buy · ${SPINESPY_PRICE_USD}</span>
+              <span className="sm:hidden">Unlock Pro · ${SPINESPY_PRICE_USD}</span>
             </a>
           </div>
         </div>
@@ -166,15 +166,20 @@ export default function Home() {
               you. Local, in the menubar.
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-8">
-              <a href={LEMON_SQUEEZY_CHECKOUT_URL} className="btn-primary">
-                <ShoppingBag className="w-5 h-5" aria-hidden="true" />
-                {BUY_CTA_LABEL}
-              </a>
-              <a href="#demo" className="btn-secondary">
-                <Play className="w-4 h-4" aria-hidden="true" />
-                Watch demo
-              </a>
+            <motion.div variants={fadeInUp} className="flex flex-col items-center gap-3 mb-8">
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <a href={LEMON_SQUEEZY_CHECKOUT_URL} className="btn-primary">
+                  <ShoppingBag className="w-5 h-5" aria-hidden="true" />
+                  {BUY_CTA_LABEL}
+                </a>
+                <a href="#demo" className="btn-secondary">
+                  <Play className="w-4 h-4" aria-hidden="true" />
+                  Watch demo
+                </a>
+              </div>
+              <p className="text-sm text-[var(--ink-muted)]">
+                One-time. Up to 3 Macs. No subscription.
+              </p>
             </motion.div>
 
             <motion.div
@@ -378,15 +383,20 @@ export default function Home() {
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
             A one-time ${SPINESPY_PRICE_USD} purchase. Camera data stays on your Mac.
           </p>
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <a href={LEMON_SQUEEZY_CHECKOUT_URL} className="btn-primary">
-              <ShoppingBag className="w-5 h-5" aria-hidden="true" />
-              {BUY_CTA_LABEL}
-            </a>
-            <a href="#demo" className="btn-secondary">
-              <Play className="w-4 h-4" aria-hidden="true" />
-              Watch demo
-            </a>
+          <div className="flex flex-col items-start gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <a href={LEMON_SQUEEZY_CHECKOUT_URL} className="btn-primary">
+                <ShoppingBag className="w-5 h-5" aria-hidden="true" />
+                {BUY_CTA_LABEL}
+              </a>
+              <a href="#demo" className="btn-secondary">
+                <Play className="w-4 h-4" aria-hidden="true" />
+                Watch demo
+              </a>
+            </div>
+            <p className="text-sm text-[var(--ink-muted)]">
+              One-time. Up to 3 Macs. No subscription.
+            </p>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">macOS 15+ · Apple Silicon</p>
         </div>
