@@ -1,9 +1,10 @@
 import {
-  DOWNLOAD_URL,
+  LEMON_SQUEEZY_CHECKOUT_URL,
   PRODUCTION_SITE_ORIGIN,
   PRODUCTION_SITE_URL,
   SITE_DESCRIPTION,
   SOCIAL_IMAGE_PATH,
+  SPINESPY_PRICE_USD,
 } from "./site";
 
 export function buildStructuredData() {
@@ -24,11 +25,11 @@ export function buildStructuredData() {
         description: SITE_DESCRIPTION,
         url: PRODUCTION_SITE_URL,
         image: `${PRODUCTION_SITE_ORIGIN}${SOCIAL_IMAGE_PATH}`,
-        downloadUrl: DOWNLOAD_URL,
         offers: {
           "@type": "Offer",
-          price: "0",
+          price: String(SPINESPY_PRICE_USD),
           priceCurrency: "USD",
+          url: LEMON_SQUEEZY_CHECKOUT_URL,
         },
         brand: {
           "@id": `${PRODUCTION_SITE_ORIGIN}/#organization`,
@@ -71,10 +72,18 @@ export function buildStructuredData() {
           },
           {
             "@type": "Question",
+            name: "How much does SpineSpy cost?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "$5 USD, one time. No trial period and no subscription.",
+            },
+          },
+          {
+            "@type": "Question",
             name: "Is SpineSpy a local macOS posture app?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.",
+              text: "Yes. It is a menubar app for Apple Silicon on macOS 15 or later. Processing stays on your Mac.",
             },
           },
         ],

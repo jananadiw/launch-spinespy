@@ -1,6 +1,8 @@
 # SpineSpy Landing Page
 
->Landing page for [SpineSpy](https://github.com/jananadiw/spinespy).
+Public marketing site for [SpineSpy](https://www.spinespy.com), deployed on Vercel at [spinespy.com](https://www.spinespy.com).
+
+SpineSpy is a one-time **$5 USD** macOS menubar app (Lemon Squeezy checkout linked from the site when live).
 
 ## Tech Stack
 
@@ -9,7 +11,7 @@
 - Tailwind CSS
 - Framer Motion
 
-Project decisions are recorded in [decisions.md](decisions.md).
+Project decisions are recorded in [decisions.md](context/decisions.md).
 
 ## Getting Started
 
@@ -28,7 +30,3 @@ Open [http://localhost:3000](http://localhost:3000) to view.
 | `npm run build` | Build for production |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
-
-## License
-
-MIT
