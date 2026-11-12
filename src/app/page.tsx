@@ -17,7 +17,7 @@ import {
   SPINESPY_PRICE_USD,
 } from "@/lib/site";
 
-const BUY_CTA_LABEL = `Unlock Pro · $${SPINESPY_PRICE_USD} once`;
+const BUY_CTA_LABEL = "Unlock Pro";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -124,7 +124,7 @@ export default function Home() {
             >
               <ShoppingBag className="w-4 h-4" aria-hidden="true" />
               <span className="hidden sm:inline">{BUY_CTA_LABEL}</span>
-              <span className="sm:hidden">Unlock Pro · ${SPINESPY_PRICE_USD}</span>
+              <span className="sm:hidden">Unlock Pro</span>
             </a>
           </div>
         </div>
