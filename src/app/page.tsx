@@ -8,16 +8,20 @@ import {
   Monitor,
   Play,
   Shield,
-  ShoppingBag,
+  Sparkles,
   Smartphone,
 } from "lucide-react";
 import Image from "next/image";
+import { CheckoutForm } from "@/components/checkout-form";
+import { TrialDownloadLink } from "@/components/trial-download-link";
 import {
+  ACTIVATION_LIMIT_COPY,
   SPINESPY_PRICE_USD,
   TRIAL_DAYS,
+  buildSpineSpyPricingFaqAnswer,
 } from "@/lib/site";
 
-const BUY_CTA_LABEL = "Unlock Pro";
+const BUY_CTA_LABEL = `Unlock Pro · $${SPINESPY_PRICE_USD} once`;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -121,14 +125,11 @@ export default function Home() {
             <a href="/pricing" className="text-sm font-medium hover:text-[var(--ink)] hidden sm:inline">
               Pricing
             </a>
-            <a
-              href="/api/checkout"
-              className="btn-primary btn-compact"
-            >
-              <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-              <span className="hidden sm:inline">{BUY_CTA_LABEL}</span>
-              <span className="sm:hidden">Unlock Pro</span>
-            </a>
+            <CheckoutForm
+              compact
+              label={BUY_CTA_LABEL}
+              className="btn-primary"
+            />
           </div>
         </div>
       </motion.header>
@@ -171,17 +172,15 @@ export default function Home() {
 
             <motion.div variants={fadeInUp} className="flex flex-col items-center gap-3 mb-8">
               <div className="flex flex-wrap items-center justify-center gap-3">
-                <a href="/api/checkout" className="btn-primary">
-                  <ShoppingBag className="w-5 h-5" aria-hidden="true" />
-                  {BUY_CTA_LABEL}
-                </a>
+                <TrialDownloadLink className="btn-primary" />
+                <CheckoutForm label={BUY_CTA_LABEL} className="btn-secondary" />
                 <a href="#demo" className="btn-secondary">
                   <Play className="w-4 h-4" aria-hidden="true" />
                   Watch demo
                 </a>
               </div>
               <p className="text-sm text-[var(--ink-muted)]">
-                One-time. Up to 3 Macs. No subscription.
+                Free tier · {TRIAL_DAYS}-day Pro trial in the app. {ACTIVATION_LIMIT_COPY} on purchase.
               </p>
             </motion.div>
 
@@ -190,8 +189,8 @@ export default function Home() {
               className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-[var(--ink-muted)]"
             >
               <span className="inline-flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-                ${SPINESPY_PRICE_USD} one-time · no subscription
+                <Sparkles className="w-4 h-4" aria-hidden="true" />
+                {TRIAL_DAYS}-day Pro trial · free tier always available
               </span>
               <span className="inline-flex items-center gap-2">
                 <Monitor className="w-4 h-4" aria-hidden="true" />
@@ -384,21 +383,20 @@ export default function Home() {
             <span className="emphasis">one quiet nudge at a time.</span>
           </h2>
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
-            A one-time ${SPINESPY_PRICE_USD} purchase (tax calculated at checkout). Camera data stays on your Mac.
+            Download free, try Pro for {TRIAL_DAYS} days, then unlock once for ${SPINESPY_PRICE_USD}{" "}
+            (tax at checkout). Camera data stays on your Mac.
           </p>
           <div className="flex flex-col items-start gap-3 mb-4">
             <div className="flex flex-wrap items-center gap-3">
-              <a href="/api/checkout" className="btn-primary">
-                <ShoppingBag className="w-5 h-5" aria-hidden="true" />
-                {BUY_CTA_LABEL}
-              </a>
+              <TrialDownloadLink className="btn-primary" />
+              <CheckoutForm label={BUY_CTA_LABEL} className="btn-secondary" />
               <a href="#demo" className="btn-secondary">
                 <Play className="w-4 h-4" aria-hidden="true" />
                 Watch demo
               </a>
             </div>
             <p className="text-sm text-[var(--ink-muted)]">
-              One-time. Up to 3 Macs. No subscription.
+              One-time Pro · {ACTIVATION_LIMIT_COPY}. No subscription.
             </p>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">macOS 15+ · Apple Silicon</p>
@@ -448,8 +446,7 @@ export default function Home() {
                 How much does SpineSpy cost?
               </summary>
               <div className="faq-answer">
-                ${SPINESPY_PRICE_USD} USD (tax calculated at checkout), one time. No subscription. 
-                Pro features include a {TRIAL_DAYS}-day free trial in the app, no credit card required.
+                {buildSpineSpyPricingFaqAnswer()}
               </div>
             </details>
             <details className="faq-item group">

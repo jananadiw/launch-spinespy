@@ -1,14 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, ShoppingBag, Shield, Sparkles } from "lucide-react";
+import { Check, Shield, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { CheckoutForm } from "@/components/checkout-form";
+import { TrialDownloadLink } from "@/components/trial-download-link";
 import {
   SPINESPY_PRICE_USD,
   SUPPORT_EMAIL,
   TRIAL_DAYS,
   REFUND_DAYS,
   MAX_ACTIVATIONS,
+  ACTIVATION_LIMIT_COPY,
 } from "@/lib/site";
 
 const fadeInUp = {
@@ -37,14 +40,6 @@ const proFeatures = [
 ];
 
 export default function PricingPage() {
-  const handleCheckout = async () => {
-    try {
-      window.location.href = "/api/checkout";
-    } catch (error) {
-      console.error("Checkout error:", error);
-    }
-  };
-
   return (
     <main className="min-h-screen relative bg-[var(--paper)]">
       <div className="noise-overlay" aria-hidden="true" />
@@ -132,16 +127,17 @@ export default function PricingPage() {
                 </p>
               </div>
 
-              <button
-                onClick={handleCheckout}
-                className="btn-primary w-full mb-4 flex items-center justify-center gap-2"
-              >
-                <ShoppingBag className="w-5 h-5" aria-hidden="true" />
-                Unlock Pro
-              </button>
+              <div className="flex flex-col gap-3 mb-4">
+                <TrialDownloadLink className="btn-secondary w-full justify-center" />
+                <CheckoutForm
+                  label={`Unlock Pro · $${SPINESPY_PRICE_USD} once`}
+                  formClassName="block w-full"
+                  className="btn-primary w-full justify-center"
+                />
+              </div>
 
               <p className="text-sm text-center text-[var(--ink-muted)] mb-6">
-                One-time. Up to {MAX_ACTIVATIONS} Macs. No subscription.
+                One-time. {ACTIVATION_LIMIT_COPY}. No subscription.
               </p>
 
               <div className="pt-6 border-t border-[var(--border)]">
@@ -171,6 +167,10 @@ export default function PricingPage() {
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white border border-[var(--border)] rounded-lg p-6">
                 <h3 className="text-xl font-semibold mb-4">Free</h3>
+                <TrialDownloadLink
+                  className="btn-secondary w-full justify-center mb-4 text-sm"
+                  showIcon
+                />
                 <ul className="space-y-2">
                   {freeFeatures.map((feature) => (
                     <li key={feature} className="flex items-start gap-2 text-sm">

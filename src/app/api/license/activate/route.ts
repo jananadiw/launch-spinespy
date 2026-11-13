@@ -20,8 +20,18 @@ function checkRateLimit(identifier: string, limit = 10, windowMs = 60000): boole
   return true;
 }
 
+function getClientIp(request: NextRequest): string {
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0]?.trim() || "unknown";
+  }
+  return "unknown";
+}
+
 export async function POST(request: NextRequest) {
-  const clientIp = request.headers.get("x-forwarded-for") || "unknown";
+  const clientIp = getClientIp(request);
   
   if (!checkRateLimit(clientIp)) {
     return NextResponse.json(

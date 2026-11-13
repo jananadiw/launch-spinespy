@@ -1,16 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { fulfillOrder } from "@/lib/fulfill";
-import { revokeLicense, getLicenseBySessionId, trackWebhookEvent } from "@/lib/license";
+import {
+  claimWebhookEvent,
+  releaseWebhookEvent,
+  revokeLicense,
+} from "@/lib/license";
+import { findLicenseForCharge } from "@/lib/stripe-refunds";
+import { getCheckoutSessionEmail } from "@/lib/stripe-session";
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+
+async function fulfillCheckoutSession(session: Stripe.Checkout.Session): Promise<void> {
+  const email = getCheckoutSessionEmail(session);
+  if (!email) {
+    throw new Error(
+      `Checkout session ${session.id} is paid but has no customer email`,
+    );
+  }
+  await fulfillOrder(session.id, email);
+}
 
 export async function POST(request: NextRequest) {
   if (!STRIPE_SECRET_KEY || !STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json(
       { error: "Stripe webhook is not configured" },
-      { status: 503 }
+      { status: 503 },
     );
   }
 
@@ -24,7 +40,7 @@ export async function POST(request: NextRequest) {
   if (!signature) {
     return NextResponse.json(
       { error: "Missing stripe-signature header" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -34,103 +50,75 @@ export async function POST(request: NextRequest) {
     event = stripe.webhooks.constructEvent(body, signature, STRIPE_WEBHOOK_SECRET);
   } catch (error) {
     console.error("Webhook signature verification failed:", error);
-    return NextResponse.json(
-      { error: "Invalid signature" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+  }
+
+  const sessionIdForClaim = event.type.startsWith("checkout.session")
+    ? (event.data.object as Stripe.Checkout.Session).id
+  : undefined;
+
+  const isNewEvent = await claimWebhookEvent(
+    event.id,
+    event.type,
+    sessionIdForClaim,
+  );
+
+  if (!isNewEvent) {
+    console.log(`Webhook event ${event.id} already processed, skipping`);
+    return NextResponse.json({ received: true, skipped: true });
   }
 
   try {
-    const alreadyProcessed = await trackWebhookEvent(
-      event.id,
-      event.type,
-      event.type.startsWith("checkout.session") 
-        ? (event.data.object as Stripe.Checkout.Session).id 
-        : undefined
-    );
-
-    if (!alreadyProcessed) {
-      console.log(`Webhook event ${event.id} already processed, skipping`);
-      return NextResponse.json({ received: true, skipped: true });
-    }
-
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        
-        if (session.payment_status === "paid" && session.customer_email) {
-          await fulfillOrder(session.id, session.customer_email);
+        if (session.payment_status === "paid") {
+          await fulfillCheckoutSession(session);
         }
         break;
       }
 
       case "checkout.session.async_payment_succeeded": {
         const session = event.data.object as Stripe.Checkout.Session;
-        
-        if (session.customer_email) {
-          await fulfillOrder(session.id, session.customer_email);
-        }
+        await fulfillCheckoutSession(session);
         break;
       }
 
       case "charge.refunded": {
         const charge = event.data.object as Stripe.Charge;
-        
-        if (charge.metadata?.session_id) {
-          const license = await getLicenseBySessionId(charge.metadata.session_id);
-          if (license) {
-            await revokeLicense(license.key);
-          }
-        } else if (charge.payment_intent) {
-          const paymentIntent = await stripe.paymentIntents.retrieve(
-            charge.payment_intent as string
-          );
-          
-          if (paymentIntent.metadata?.session_id) {
-            const license = await getLicenseBySessionId(paymentIntent.metadata.session_id);
-            if (license) {
-              await revokeLicense(license.key);
-            }
-          }
+        const license = await findLicenseForCharge(stripe, charge);
+        if (license) {
+          await revokeLicense(license.key);
         }
         break;
       }
 
       case "charge.dispute.created": {
         const dispute = event.data.object as Stripe.Dispute;
-        const charge = dispute.charge;
-        
-        if (typeof charge === "string") {
-          const chargeObj = await stripe.charges.retrieve(charge);
-          
-          if (chargeObj.metadata?.session_id) {
-            const license = await getLicenseBySessionId(chargeObj.metadata.session_id);
-            if (license) {
-              await revokeLicense(license.key);
-            }
-          } else if (chargeObj.payment_intent) {
-            const paymentIntent = await stripe.paymentIntents.retrieve(
-              chargeObj.payment_intent as string
-            );
-            
-            if (paymentIntent.metadata?.session_id) {
-              const license = await getLicenseBySessionId(paymentIntent.metadata.session_id);
-              if (license) {
-                await revokeLicense(license.key);
-              }
-            }
-          }
+        const chargeId =
+          typeof dispute.charge === "string" ? dispute.charge : dispute.charge?.id;
+        if (!chargeId) {
+          break;
+        }
+        const chargeObj = await stripe.charges.retrieve(chargeId);
+        const license = await findLicenseForCharge(stripe, chargeObj);
+        if (license) {
+          await revokeLicense(license.key);
         }
         break;
       }
+
+      default:
+        break;
     }
 
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error(`Error processing webhook event ${event.id}:`, error);
+    await releaseWebhookEvent(event.id);
     return NextResponse.json(
       { error: "Webhook processing failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

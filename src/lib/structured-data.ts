@@ -4,7 +4,9 @@ import {
   SITE_DESCRIPTION,
   SOCIAL_IMAGE_PATH,
   SPINESPY_PRICE_USD,
-  TRIAL_DAYS,
+  buildSpineSpyPricingFaqAnswer,
+  isTrialDownloadLive,
+  TRIAL_BUILD_DOWNLOAD_URL,
 } from "./site";
 
 export function buildStructuredData() {
@@ -25,6 +27,9 @@ export function buildStructuredData() {
         description: SITE_DESCRIPTION,
         url: PRODUCTION_SITE_URL,
         image: `${PRODUCTION_SITE_ORIGIN}${SOCIAL_IMAGE_PATH}`,
+        ...(isTrialDownloadLive()
+          ? { downloadUrl: TRIAL_BUILD_DOWNLOAD_URL }
+          : {}),
         offers: {
           "@type": "Offer",
           price: String(SPINESPY_PRICE_USD),
@@ -75,7 +80,7 @@ export function buildStructuredData() {
             name: "How much does SpineSpy cost?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: `$${SPINESPY_PRICE_USD} USD (tax calculated at checkout), one time. No subscription. Pro features include a ${TRIAL_DAYS}-day free trial in the app, no credit card required.`,
+              text: buildSpineSpyPricingFaqAnswer(),
             },
           },
           {

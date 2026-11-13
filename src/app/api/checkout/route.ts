@@ -1,27 +1,29 @@
-import { NextResponse } from "next/server";
+import { randomBytes } from "crypto";
+import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { resolveSiteOrigin } from "@/lib/stripe-session";
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID;
-const NEXT_PUBLIC_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-export async function POST() {
+async function createCheckoutResponse(request: NextRequest): Promise<NextResponse> {
   if (!STRIPE_SECRET_KEY || !STRIPE_PRICE_ID) {
     return NextResponse.json(
       {
         error: "Stripe is not configured. Please try again later.",
         code: "STRIPE_NOT_CONFIGURED",
       },
-      { status: 503 }
+      { status: 503 },
     );
   }
 
   try {
+    const siteOrigin = resolveSiteOrigin(request);
     const stripe = new Stripe(STRIPE_SECRET_KEY, {
       apiVersion: "2025-03-31.basil" as Stripe.LatestApiVersion,
     });
 
-    const idempotencyKey = `checkout_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const idempotencyKey = `checkout_${randomBytes(16).toString("hex")}`;
 
     const session = await stripe.checkout.sessions.create(
       {
@@ -35,19 +37,20 @@ export async function POST() {
         automatic_tax: {
           enabled: true,
         },
-        success_url: `${NEXT_PUBLIC_SITE_URL}/thanks?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${NEXT_PUBLIC_SITE_URL}/pricing`,
+        success_url: `${siteOrigin}/thanks?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${siteOrigin}/pricing`,
         billing_address_collection: "auto",
+        customer_creation: "always",
       },
       {
         idempotencyKey,
-      }
+      },
     );
 
     if (!session.url) {
       return NextResponse.json(
         { error: "Failed to create checkout session", code: "NO_SESSION_URL" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -56,10 +59,22 @@ export async function POST() {
     console.error("Checkout error:", error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Failed to create checkout session",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to create checkout session",
         code: "CHECKOUT_ERROR",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
+}
+
+export async function POST(request: NextRequest) {
+  return createCheckoutResponse(request);
+}
+
+/** Convenience for mistaken GET navigations; prefer POST forms in the UI. */
+export async function GET(request: NextRequest) {
+  return createCheckoutResponse(request);
 }

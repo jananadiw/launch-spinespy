@@ -18,6 +18,28 @@ export const TRIAL_DAYS = 7;
 export const REFUND_DAYS = 14;
 export const MAX_ACTIVATIONS = 3;
 
+/**
+ * Direct download for the free tier + in-app Pro trial build (.dmg or zip).
+ * TODO: Replace with the hosted trial build URL before launch (or set NEXT_PUBLIC_TRIAL_BUILD_DOWNLOAD_URL in Vercel).
+ */
+export const TRIAL_BUILD_DOWNLOAD_URL =
+  process.env.NEXT_PUBLIC_TRIAL_BUILD_DOWNLOAD_URL?.trim() ||
+  "TODO_REPLACE_WITH_TRIAL_BUILD_DOWNLOAD_URL";
+
+export function isTrialDownloadLive(): boolean {
+  return TRIAL_BUILD_DOWNLOAD_URL.startsWith("https://");
+}
+
+/** Shared copy for homepage FAQ and JSON-LD. */
+export function buildSpineSpyPricingFaqAnswer(): string {
+  return (
+    `Free tier on macOS with a ${TRIAL_DAYS}-day Pro trial in the app (no credit card). ` +
+    `Pro is $${SPINESPY_PRICE_USD} USD once (tax at checkout), up to ${MAX_ACTIVATIONS} Macs. No subscription.`
+  );
+}
+
+export const ACTIVATION_LIMIT_COPY = `Up to ${MAX_ACTIVATIONS} Macs`;
+
 export function isProductionHost(host: string | null): boolean {
   if (!host) return false;
   const normalized = host.split(":")[0].toLowerCase();

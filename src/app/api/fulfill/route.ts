@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fulfillOrder } from "@/lib/fulfill";
+import { getCheckoutSessionEmail } from "@/lib/stripe-session";
 import Stripe from "stripe";
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
@@ -8,7 +9,7 @@ export async function POST(request: NextRequest) {
   if (!STRIPE_SECRET_KEY) {
     return NextResponse.json(
       { error: "Stripe is not configured" },
-      { status: 503 }
+      { status: 503 },
     );
   }
 
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     if (!session_id || typeof session_id !== "string") {
       return NextResponse.json(
         { error: "Session ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,22 +29,23 @@ export async function POST(request: NextRequest) {
     });
 
     const session = await stripe.checkout.sessions.retrieve(session_id);
+    const email = getCheckoutSessionEmail(session);
 
-    if (!session.customer_email) {
+    if (!email) {
       return NextResponse.json(
         { error: "Session does not have a customer email" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     if (session.payment_status !== "paid") {
       return NextResponse.json(
         { error: "Payment has not been completed" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const licenseKey = await fulfillOrder(session_id, session.customer_email);
+    const licenseKey = await fulfillOrder(session_id, email);
 
     return NextResponse.json({
       success: true,
@@ -53,9 +55,10 @@ export async function POST(request: NextRequest) {
     console.error("Fulfill error:", error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Failed to fulfill order",
+        error:
+          error instanceof Error ? error.message : "Failed to fulfill order",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
