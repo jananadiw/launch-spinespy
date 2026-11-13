@@ -6,7 +6,7 @@ import {
   releaseWebhookEvent,
   revokeLicense,
 } from "@/lib/license";
-import { findLicenseForCharge } from "@/lib/stripe-refunds";
+import { findLicenseForCharge, isChargeFullyRefunded } from "@/lib/stripe-refunds";
 import { getCheckoutSessionEmail } from "@/lib/stripe-session";
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
@@ -86,6 +86,9 @@ export async function POST(request: NextRequest) {
 
       case "charge.refunded": {
         const charge = event.data.object as Stripe.Charge;
+        if (!isChargeFullyRefunded(charge)) {
+          break;
+        }
         const license = await findLicenseForCharge(stripe, charge);
         if (license) {
           await revokeLicense(license.key);

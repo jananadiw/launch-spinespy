@@ -1,7 +1,12 @@
 import { neon } from "@neondatabase/serverless";
 import nacl from "tweetnacl";
 import naclUtil from "tweetnacl-util";
+import { getTransactionPool } from "./db-pool";
 import { generateLicenseKey } from "./license-key";
+import {
+  LicenseActivationError,
+  runActivateLicenseTransaction,
+} from "./license-activation";
 import { MAX_ACTIVATIONS } from "./site";
 
 const DATABASE_URL = process.env.DATABASE_URL;
@@ -132,65 +137,45 @@ export async function activateLicense(
   licenseKey: string,
   deviceIdHash: string,
 ): Promise<{ instance_id: string; token: string }> {
-  const sql = getDb();
   const instanceId = generateInstanceId();
+  const pool = getTransactionPool();
+  const client = await pool.connect();
 
-  const rows = await sql`
-    WITH lock AS (
-      SELECT pg_advisory_xact_lock(hashtext(${licenseKey}))
-    ),
-    lic AS (
-      SELECT status FROM licenses WHERE key = ${licenseKey} LIMIT 1
-    ),
-    inserted AS (
-      INSERT INTO activations (license_key, device_id_hash, instance_id, last_seen)
-      SELECT ${licenseKey}, ${deviceIdHash}, ${instanceId}, NOW()
-      WHERE EXISTS (SELECT 1 FROM lic WHERE status = 'active')
-        AND (
-          EXISTS (
-            SELECT 1 FROM activations
-            WHERE license_key = ${licenseKey} AND device_id_hash = ${deviceIdHash}
-          )
-          OR (
-            SELECT COUNT(*)::int FROM activations WHERE license_key = ${licenseKey}
-          ) < ${MAX_ACTIVATIONS}
-        )
-      ON CONFLICT (license_key, device_id_hash)
-      DO UPDATE SET last_seen = NOW()
-      RETURNING instance_id
-    )
-    SELECT instance_id FROM inserted
-  `;
-
-  if (rows.length === 0) {
-    const license = await getLicenseByKey(licenseKey);
-    if (!license) {
-      throw new Error("License not found");
-    }
-    if (license.status === "revoked") {
-      throw new Error("License has been revoked");
-    }
-    throw new Error(
-      `License is already activated on ${MAX_ACTIVATIONS} devices. Deactivate one device first to activate on a new device.`,
+  try {
+    const result = await runActivateLicenseTransaction(
+      client,
+      licenseKey,
+      deviceIdHash,
+      instanceId,
+      MAX_ACTIVATIONS,
     );
+
+    if (result === null) {
+      throw new Error(
+        `License is already activated on ${MAX_ACTIVATIONS} devices. Deactivate one device first to activate on a new device.`,
+      );
+    }
+
+    const token = signLicenseToken({
+      key: licenseKey,
+      instance_id: result.instance_id,
+      status: result.status,
+      issued_at: Date.now(),
+      expires_at: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return {
+      instance_id: result.instance_id,
+      token,
+    };
+  } catch (error) {
+    if (error instanceof LicenseActivationError) {
+      throw new Error(error.message);
+    }
+    throw error;
+  } finally {
+    client.release();
   }
-
-  const resolvedInstanceId = (rows[0] as { instance_id: string }).instance_id;
-  const license = await getLicenseByKey(licenseKey);
-  const status = license?.status ?? "active";
-
-  const token = signLicenseToken({
-    key: licenseKey,
-    instance_id: resolvedInstanceId,
-    status,
-    issued_at: Date.now(),
-    expires_at: Date.now() + 7 * 24 * 60 * 60 * 1000,
-  });
-
-  return {
-    instance_id: resolvedInstanceId,
-    token,
-  };
 }
 
 export async function validateLicense(

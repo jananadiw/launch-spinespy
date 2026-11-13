@@ -106,7 +106,10 @@ export default function PricingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="bg-white border-2 border-[var(--ink)] rounded-xl p-8 shadow-lg">
+            <div
+              id="pro"
+              className="bg-white border-2 border-[var(--ink)] rounded-xl p-8 shadow-lg scroll-mt-28"
+            >
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-[var(--ink)] rounded-lg flex items-center justify-center">
                   <Sparkles className="w-6 h-6 text-[var(--paper)]" aria-hidden="true" />

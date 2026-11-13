@@ -6,6 +6,10 @@ import { resolveSiteOrigin } from "@/lib/stripe-session";
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PRICE_ID = process.env.STRIPE_PRICE_ID;
 
+const NOINDEX_HEADERS = {
+  "X-Robots-Tag": "noindex, nofollow",
+};
+
 async function createCheckoutResponse(request: NextRequest): Promise<NextResponse> {
   if (!STRIPE_SECRET_KEY || !STRIPE_PRICE_ID) {
     return NextResponse.json(
@@ -13,7 +17,7 @@ async function createCheckoutResponse(request: NextRequest): Promise<NextRespons
         error: "Stripe is not configured. Please try again later.",
         code: "STRIPE_NOT_CONFIGURED",
       },
-      { status: 503 },
+      { status: 503, headers: NOINDEX_HEADERS },
     );
   }
 
@@ -50,11 +54,15 @@ async function createCheckoutResponse(request: NextRequest): Promise<NextRespons
     if (!session.url) {
       return NextResponse.json(
         { error: "Failed to create checkout session", code: "NO_SESSION_URL" },
-        { status: 500 },
+        { status: 500, headers: NOINDEX_HEADERS },
       );
     }
 
-    return NextResponse.redirect(session.url, 303);
+    const response = NextResponse.redirect(session.url, 303);
+    for (const [key, value] of Object.entries(NOINDEX_HEADERS)) {
+      response.headers.set(key, value);
+    }
+    return response;
   } catch (error) {
     console.error("Checkout error:", error);
     return NextResponse.json(
@@ -65,7 +73,7 @@ async function createCheckoutResponse(request: NextRequest): Promise<NextRespons
             : "Failed to create checkout session",
         code: "CHECKOUT_ERROR",
       },
-      { status: 500 },
+      { status: 500, headers: NOINDEX_HEADERS },
     );
   }
 }
@@ -74,7 +82,12 @@ export async function POST(request: NextRequest) {
   return createCheckoutResponse(request);
 }
 
-/** Convenience for mistaken GET navigations; prefer POST forms in the UI. */
+/** No side effects: send humans to pricing so checkout only happens via POST. */
 export async function GET(request: NextRequest) {
-  return createCheckoutResponse(request);
+  const pricingUrl = new URL("/pricing#pro", request.url);
+  const response = NextResponse.redirect(pricingUrl, 307);
+  for (const [key, value] of Object.entries(NOINDEX_HEADERS)) {
+    response.headers.set(key, value);
+  }
+  return response;
 }

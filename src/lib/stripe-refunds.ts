@@ -1,6 +1,13 @@
 import type Stripe from "stripe";
 import { getLicenseBySessionId, type License } from "./license";
 
+export function isChargeFullyRefunded(charge: Stripe.Charge): boolean {
+  return (
+    charge.refunded === true ||
+    (charge.amount > 0 && charge.amount_refunded >= charge.amount)
+  );
+}
+
 export async function findLicenseForCharge(
   stripe: Stripe,
   charge: Stripe.Charge,
