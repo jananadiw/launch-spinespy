@@ -4,20 +4,24 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import {
   Bell,
-  Download,
   Eye,
-  Github,
   Monitor,
   Play,
   Shield,
+  Sparkles,
   Smartphone,
-  Star,
 } from "lucide-react";
 import Image from "next/image";
+import { CheckoutForm } from "@/components/checkout-form";
+import { TrialDownloadLink } from "@/components/trial-download-link";
+import {
+  ACTIVATION_LIMIT_COPY,
+  SPINESPY_PRICE_USD,
+  TRIAL_DAYS,
+  buildSpineSpyPricingFaqAnswer,
+} from "@/lib/site";
 
-const DOWNLOAD_URL =
-  "https://github.com/jananadiw/spinespy/releases/download/v1.3.3/SpineSpy.dmg";
-const SOURCE_URL = "https://github.com/jananadiw/spinespy";
+const BUY_CTA_LABEL = `Unlock Pro`;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -118,27 +122,14 @@ export default function Home() {
             SpineSpy
           </a>
           <div className="flex items-center gap-3 sm:gap-4">
-            <a
-              href={SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-source"
-            >
-              <Github className="w-5 h-5" aria-hidden="true" />
-              <span className="hidden sm:block">
-                <span className="text-sm font-semibold leading-tight">GitHub</span>
-                <span className="nav-source-sub">View source</span>
-              </span>
-              <span className="sr-only sm:hidden">GitHub, view source</span>
+            <a href="/pricing" className="text-sm font-medium hover:text-[var(--ink)] hidden sm:inline">
+              Pricing
             </a>
-            <a
-              href={DOWNLOAD_URL}
-              download="SpineSpy.dmg"
-              className="btn-primary btn-compact"
-            >
-              <Download className="w-4 h-4" aria-hidden="true" />
-              Download
-            </a>
+            <CheckoutForm
+              compact
+              label={BUY_CTA_LABEL}
+              className="btn-primary"
+            />
           </div>
         </div>
       </motion.header>
@@ -179,15 +170,18 @@ export default function Home() {
               you. Local, in the menubar.
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-8">
-              <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
-                <Download className="w-5 h-5" aria-hidden="true" />
-                Download for macOS
-              </a>
-              <a href="#demo" className="btn-secondary">
-                <Play className="w-4 h-4" aria-hidden="true" />
-                Watch demo
-              </a>
+            <motion.div variants={fadeInUp} className="flex flex-col items-center gap-3 mb-8">
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <TrialDownloadLink className="btn-primary" />
+                <CheckoutForm label={BUY_CTA_LABEL} className="btn-secondary" />
+                <a href="#demo" className="btn-secondary">
+                  <Play className="w-4 h-4" aria-hidden="true" />
+                  Watch demo
+                </a>
+              </div>
+              <p className="text-sm text-[var(--ink-muted)]">
+                Free tier · {TRIAL_DAYS}-day Pro trial in the app. {ACTIVATION_LIMIT_COPY} on purchase.
+              </p>
             </motion.div>
 
             <motion.div
@@ -195,8 +189,8 @@ export default function Home() {
               className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-[var(--ink-muted)]"
             >
               <span className="inline-flex items-center gap-2">
-                <Star className="w-4 h-4" aria-hidden="true" />
-                Open source
+                <Sparkles className="w-4 h-4" aria-hidden="true" />
+                {TRIAL_DAYS}-day Pro trial · free tier always available
               </span>
               <span className="inline-flex items-center gap-2">
                 <Monitor className="w-4 h-4" aria-hidden="true" />
@@ -379,16 +373,6 @@ export default function Home() {
               </p>
             </li>
           </ol>
-
-          <a
-            href={SOURCE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-10 font-semibold hover:underline"
-          >
-            <Github className="w-4 h-4" aria-hidden="true" />
-            Verify it in the source
-          </a>
         </div>
       </section>
 
@@ -399,22 +383,20 @@ export default function Home() {
             <span className="emphasis">one quiet nudge at a time.</span>
           </h2>
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
-            Free, open source, and built so camera data stays on your Mac.
+            Download free, try Pro for {TRIAL_DAYS} days, then unlock once for ${SPINESPY_PRICE_USD.toFixed(2)} + tax. Camera data stays on your Mac.
           </p>
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
-              <Download className="w-5 h-5" aria-hidden="true" />
-              Download for macOS
-            </a>
-            <a
-              href={SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary"
-            >
-              <Github className="w-5 h-5" aria-hidden="true" />
-              Star on GitHub
-            </a>
+          <div className="flex flex-col items-start gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <TrialDownloadLink className="btn-primary" />
+              <CheckoutForm label={BUY_CTA_LABEL} className="btn-secondary" />
+              <a href="#demo" className="btn-secondary">
+                <Play className="w-4 h-4" aria-hidden="true" />
+                Watch demo
+              </a>
+            </div>
+            <p className="text-sm text-[var(--ink-muted)]">
+              One-time. {ACTIVATION_LIMIT_COPY}. No subscription.
+            </p>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">macOS 15+ · Apple Silicon</p>
         </div>
@@ -460,10 +442,18 @@ export default function Home() {
             </details>
             <details className="faq-item group">
               <summary className="faq-question">
+                How much does SpineSpy cost?
+              </summary>
+              <div className="faq-answer">
+                {buildSpineSpyPricingFaqAnswer()}
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
                 Is SpineSpy a local macOS posture app?
               </summary>
               <div className="faq-answer">
-                Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.
+                Yes. It is a menubar app for Apple Silicon on macOS 15 or later. Processing stays on your Mac.
               </div>
             </details>
           </div>
@@ -485,22 +475,9 @@ export default function Home() {
               <div className="text-sm text-[var(--ink-muted)]">Made for better posture</div>
             </div>
           </div>
-          <nav className="flex items-center gap-5 text-sm text-[var(--ink-muted)]">
-            <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--ink)]">
-              GitHub
-            </a>
-            <a href="https://github.com/jananadiw/spinespy/releases" className="hover:text-[var(--ink)]">
-              Releases
-            </a>
-            <a
-              href="https://github.com/jananadiw/spinespy/blob/main/LICENSE"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--ink)]"
-            >
-              MIT License
-            </a>
-          </nav>
+          <p className="text-sm text-[var(--ink-muted)]">
+            ${SPINESPY_PRICE_USD.toFixed(2)} + tax · macOS 15+ · Apple Silicon
+          </p>
         </div>
       </footer>
     </main>

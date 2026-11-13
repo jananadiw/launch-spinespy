@@ -1,9 +1,12 @@
 import {
-  DOWNLOAD_URL,
   PRODUCTION_SITE_ORIGIN,
   PRODUCTION_SITE_URL,
   SITE_DESCRIPTION,
   SOCIAL_IMAGE_PATH,
+  SPINESPY_PRICE_USD,
+  buildSpineSpyPricingFaqAnswer,
+  isTrialDownloadLive,
+  TRIAL_BUILD_DOWNLOAD_URL,
 } from "./site";
 
 export function buildStructuredData() {
@@ -24,11 +27,20 @@ export function buildStructuredData() {
         description: SITE_DESCRIPTION,
         url: PRODUCTION_SITE_URL,
         image: `${PRODUCTION_SITE_ORIGIN}${SOCIAL_IMAGE_PATH}`,
-        downloadUrl: DOWNLOAD_URL,
+        ...(isTrialDownloadLive()
+          ? { downloadUrl: TRIAL_BUILD_DOWNLOAD_URL }
+          : {}),
         offers: {
           "@type": "Offer",
-          price: "0",
+          price: String(SPINESPY_PRICE_USD.toFixed(2)),
           priceCurrency: "USD",
+          url: `${PRODUCTION_SITE_URL}/pricing`,
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            price: String(SPINESPY_PRICE_USD.toFixed(2)),
+            priceCurrency: "USD",
+            valueAddedTaxIncluded: false,
+          },
         },
         brand: {
           "@id": `${PRODUCTION_SITE_ORIGIN}/#organization`,
@@ -71,10 +83,18 @@ export function buildStructuredData() {
           },
           {
             "@type": "Question",
+            name: "How much does SpineSpy cost?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: buildSpineSpyPricingFaqAnswer(),
+            },
+          },
+          {
+            "@type": "Question",
             name: "Is SpineSpy a local macOS posture app?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.",
+              text: "Yes. It is a menubar app for Apple Silicon on macOS 15 or later. Processing stays on your Mac.",
             },
           },
         ],
