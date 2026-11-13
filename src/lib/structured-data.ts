@@ -32,9 +32,15 @@ export function buildStructuredData() {
           : {}),
         offers: {
           "@type": "Offer",
-          price: String(SPINESPY_PRICE_USD),
+          price: String(SPINESPY_PRICE_USD.toFixed(2)),
           priceCurrency: "USD",
           url: `${PRODUCTION_SITE_URL}/pricing`,
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            price: String(SPINESPY_PRICE_USD.toFixed(2)),
+            priceCurrency: "USD",
+            valueAddedTaxIncluded: false,
+          },
         },
         brand: {
           "@id": `${PRODUCTION_SITE_ORIGIN}/#organization`,

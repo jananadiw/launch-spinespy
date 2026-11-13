@@ -2,7 +2,7 @@
 
 Public marketing site for [SpineSpy](https://www.spinespy.com), deployed on Vercel at [spinespy.com](https://www.spinespy.com).
 
-SpineSpy is a one-time **$5 USD** (plus applicable tax) macOS menubar app with Stripe checkout and license management.
+SpineSpy is a one-time **$9.99 USD** (plus applicable tax) macOS menubar app with Stripe checkout and license management.
 
 ## Tech Stack
 
@@ -37,7 +37,7 @@ cp .env.example .env.local
 - `NEXT_PUBLIC_SITE_URL` - Your site URL (e.g., `http://localhost:3000`)
 - `STRIPE_SECRET_KEY` - Stripe secret key
 - `STRIPE_WEBHOOK_SECRET` - Stripe webhook signing secret
-- `STRIPE_PRICE_ID` - Stripe price ID for the $5 product
+- `STRIPE_PRICE_ID` - Stripe price ID for the $9.99 product (sandbox: price_1UbTYAAZAvtzPdJvM78Ogexf)
 - `DATABASE_URL` - PostgreSQL connection string
 - `LICENSE_SIGNING_PRIVATE_KEY` - Ed25519 private key (base64)
 - `LICENSE_SIGNING_PUBLIC_KEY` - Ed25519 public key (base64)
@@ -63,8 +63,8 @@ Or connect to your database and run the SQL in `db/schema.sql`.
 ### 4. Configure Stripe
 
 1. Create a product in Stripe Dashboard
-2. Create a price for $5 USD
-3. Copy the price ID to `STRIPE_PRICE_ID`
+2. Create a price for $9.99 USD
+3. Copy the price ID to `STRIPE_PRICE_ID` (sandbox: price_1UbTYAAZAvtzPdJvM78Ogexf)
 4. Enable automatic tax collection in Stripe Dashboard
 
 ### 5. Set Up Webhook Endpoint

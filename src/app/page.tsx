@@ -21,7 +21,7 @@ import {
   buildSpineSpyPricingFaqAnswer,
 } from "@/lib/site";
 
-const BUY_CTA_LABEL = `Unlock Pro · $${SPINESPY_PRICE_USD} once`;
+const BUY_CTA_LABEL = `Unlock Pro`;
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -383,8 +383,7 @@ export default function Home() {
             <span className="emphasis">one quiet nudge at a time.</span>
           </h2>
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
-            Download free, try Pro for {TRIAL_DAYS} days, then unlock once for ${SPINESPY_PRICE_USD}{" "}
-            (tax at checkout). Camera data stays on your Mac.
+            Download free, try Pro for {TRIAL_DAYS} days, then unlock once for ${SPINESPY_PRICE_USD.toFixed(2)} + tax. Camera data stays on your Mac.
           </p>
           <div className="flex flex-col items-start gap-3 mb-4">
             <div className="flex flex-wrap items-center gap-3">
@@ -396,7 +395,7 @@ export default function Home() {
               </a>
             </div>
             <p className="text-sm text-[var(--ink-muted)]">
-              One-time Pro · {ACTIVATION_LIMIT_COPY}. No subscription.
+              One-time. {ACTIVATION_LIMIT_COPY}. No subscription.
             </p>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">macOS 15+ · Apple Silicon</p>
@@ -477,7 +476,7 @@ export default function Home() {
             </div>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">
-            ${SPINESPY_PRICE_USD} one-time · macOS 15+ · Apple Silicon
+            ${SPINESPY_PRICE_USD.toFixed(2)} + tax · macOS 15+ · Apple Silicon
           </p>
         </div>
       </footer>

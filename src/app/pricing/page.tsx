@@ -95,8 +95,7 @@ export default function PricingPage() {
               variants={fadeInUp}
               className="text-lg text-[var(--ink-muted)] max-w-2xl mx-auto leading-relaxed"
             >
-              Try Pro free for {TRIAL_DAYS} days in the app, then ${SPINESPY_PRICE_USD} once. No
-              subscription. Camera frames stay on your Mac.
+              Try Pro free for {TRIAL_DAYS} days in the app, then ${SPINESPY_PRICE_USD.toFixed(2)} one-time (tax calculated at checkout). No subscription. Camera frames stay on your Mac.
             </motion.p>
           </motion.div>
 
@@ -122,7 +121,7 @@ export default function PricingPage() {
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-4xl font-semibold">${SPINESPY_PRICE_USD}</span>
+                  <span className="text-4xl font-semibold">${SPINESPY_PRICE_USD.toFixed(2)}</span>
                   <span className="text-[var(--ink-muted)]">+ applicable tax</span>
                 </div>
                 <p className="text-sm text-[var(--ink-muted)]">
@@ -133,7 +132,7 @@ export default function PricingPage() {
               <div className="flex flex-col gap-3 mb-4">
                 <TrialDownloadLink className="btn-secondary w-full justify-center" />
                 <CheckoutForm
-                  label={`Unlock Pro · $${SPINESPY_PRICE_USD} once`}
+                  label={`Unlock Pro`}
                   formClassName="block w-full"
                   className="btn-primary w-full justify-center"
                 />
@@ -255,7 +254,7 @@ export default function PricingPage() {
                 <div className="faq-answer">
                   Yes. SpineSpy includes a {TRIAL_DAYS}-day free trial of Pro features built into
                   the app. No credit card required. After the trial, you can continue using the free
-                  version or purchase Pro for ${SPINESPY_PRICE_USD}.
+                  version or purchase Pro for ${SPINESPY_PRICE_USD.toFixed(2)} + tax.
                 </div>
               </details>
 
@@ -264,8 +263,7 @@ export default function PricingPage() {
                   How much does Pro cost?
                 </summary>
                 <div className="faq-answer">
-                  ${SPINESPY_PRICE_USD} USD (tax calculated at checkout), one time. No subscription, no
-                  recurring charges.
+                  ${SPINESPY_PRICE_USD.toFixed(2)} USD (tax calculated at checkout), one time. No subscription, no recurring charges.
                 </div>
               </details>
 

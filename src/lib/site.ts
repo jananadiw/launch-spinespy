@@ -8,7 +8,7 @@ export const SITE_DESCRIPTION =
   "A local macOS menubar app that catches slouching and phone distractions with brief camera checks. Nothing is uploaded.";
 
 /** One-time purchase price in USD (tax calculated at checkout). */
-export const SPINESPY_PRICE_USD = 5;
+export const SPINESPY_PRICE_USD = 9.99;
 
 export const SOCIAL_IMAGE_PATH = "/images/posture-good.png";
 
@@ -34,7 +34,7 @@ export function isTrialDownloadLive(): boolean {
 export function buildSpineSpyPricingFaqAnswer(): string {
   return (
     `Free tier on macOS with a ${TRIAL_DAYS}-day Pro trial in the app (no credit card). ` +
-    `Pro is $${SPINESPY_PRICE_USD} USD once (tax at checkout), up to ${MAX_ACTIVATIONS} Macs. No subscription.`
+    `Pro is $${SPINESPY_PRICE_USD.toFixed(2)} USD once (tax at checkout), up to ${MAX_ACTIVATIONS} Macs. No subscription.`
   );
 }
 
