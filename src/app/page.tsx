@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import {
-  LEMON_SQUEEZY_CHECKOUT_URL,
   SPINESPY_PRICE_USD,
+  TRIAL_DAYS,
 } from "@/lib/site";
 
 const BUY_CTA_LABEL = "Unlock Pro";
@@ -118,8 +118,11 @@ export default function Home() {
             SpineSpy
           </a>
           <div className="flex items-center gap-3 sm:gap-4">
+            <a href="/pricing" className="text-sm font-medium hover:text-[var(--ink)] hidden sm:inline">
+              Pricing
+            </a>
             <a
-              href={LEMON_SQUEEZY_CHECKOUT_URL}
+              href="/api/checkout"
               className="btn-primary btn-compact"
             >
               <ShoppingBag className="w-4 h-4" aria-hidden="true" />
@@ -168,7 +171,7 @@ export default function Home() {
 
             <motion.div variants={fadeInUp} className="flex flex-col items-center gap-3 mb-8">
               <div className="flex flex-wrap items-center justify-center gap-3">
-                <a href={LEMON_SQUEEZY_CHECKOUT_URL} className="btn-primary">
+                <a href="/api/checkout" className="btn-primary">
                   <ShoppingBag className="w-5 h-5" aria-hidden="true" />
                   {BUY_CTA_LABEL}
                 </a>
@@ -381,11 +384,11 @@ export default function Home() {
             <span className="emphasis">one quiet nudge at a time.</span>
           </h2>
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
-            A one-time ${SPINESPY_PRICE_USD} purchase. Camera data stays on your Mac.
+            A one-time ${SPINESPY_PRICE_USD} purchase (tax calculated at checkout). Camera data stays on your Mac.
           </p>
           <div className="flex flex-col items-start gap-3 mb-4">
             <div className="flex flex-wrap items-center gap-3">
-              <a href={LEMON_SQUEEZY_CHECKOUT_URL} className="btn-primary">
+              <a href="/api/checkout" className="btn-primary">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
                 {BUY_CTA_LABEL}
               </a>
@@ -445,7 +448,8 @@ export default function Home() {
                 How much does SpineSpy cost?
               </summary>
               <div className="faq-answer">
-                ${SPINESPY_PRICE_USD} USD, one time. No trial period and no subscription.
+                ${SPINESPY_PRICE_USD} USD (tax calculated at checkout), one time. No subscription. 
+                Pro features include a {TRIAL_DAYS}-day free trial in the app, no credit card required.
               </div>
             </details>
             <details className="faq-item group">

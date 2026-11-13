@@ -1,10 +1,10 @@
 import {
-  LEMON_SQUEEZY_CHECKOUT_URL,
   PRODUCTION_SITE_ORIGIN,
   PRODUCTION_SITE_URL,
   SITE_DESCRIPTION,
   SOCIAL_IMAGE_PATH,
   SPINESPY_PRICE_USD,
+  TRIAL_DAYS,
 } from "./site";
 
 export function buildStructuredData() {
@@ -29,7 +29,7 @@ export function buildStructuredData() {
           "@type": "Offer",
           price: String(SPINESPY_PRICE_USD),
           priceCurrency: "USD",
-          url: LEMON_SQUEEZY_CHECKOUT_URL,
+          url: `${PRODUCTION_SITE_URL}/pricing`,
         },
         brand: {
           "@id": `${PRODUCTION_SITE_ORIGIN}/#organization`,
@@ -75,7 +75,7 @@ export function buildStructuredData() {
             name: "How much does SpineSpy cost?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "$5 USD, one time. No trial period and no subscription.",
+              text: `$${SPINESPY_PRICE_USD} USD (tax calculated at checkout), one time. No subscription. Pro features include a ${TRIAL_DAYS}-day free trial in the app, no credit card required.`,
             },
           },
           {
