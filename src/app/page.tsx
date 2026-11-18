@@ -6,18 +6,12 @@ import {
   Bell,
   Download,
   Eye,
-  Github,
-  Monitor,
   Play,
   Shield,
   Smartphone,
-  Star,
 } from "lucide-react";
 import Image from "next/image";
-
-const DOWNLOAD_URL =
-  "https://github.com/jananadiw/spinespy/releases/download/v1.3.3/SpineSpy.dmg";
-const SOURCE_URL = "https://github.com/jananadiw/spinespy";
+import { DOWNLOAD_URL } from "@/lib/site";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -117,29 +111,14 @@ export default function Home() {
           <a href="#top" className="font-semibold text-lg tracking-tight">
             SpineSpy
           </a>
-          <div className="flex items-center gap-3 sm:gap-4">
-            <a
-              href={SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-source"
-            >
-              <Github className="w-5 h-5" aria-hidden="true" />
-              <span className="hidden sm:block">
-                <span className="text-sm font-semibold leading-tight">GitHub</span>
-                <span className="nav-source-sub">View source</span>
-              </span>
-              <span className="sr-only sm:hidden">GitHub, view source</span>
-            </a>
-            <a
-              href={DOWNLOAD_URL}
-              download="SpineSpy.dmg"
-              className="btn-primary btn-compact"
-            >
-              <Download className="w-4 h-4" aria-hidden="true" />
-              Download
-            </a>
-          </div>
+          <a
+            href={DOWNLOAD_URL}
+            download="SpineSpy.dmg"
+            className="btn-primary btn-compact"
+          >
+            <Download className="w-4 h-4" aria-hidden="true" />
+            Download
+          </a>
         </div>
       </motion.header>
 
@@ -179,7 +158,7 @@ export default function Home() {
               you. Local, in the menubar.
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-8">
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-6">
               <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
                 <Download className="w-5 h-5" aria-hidden="true" />
                 Download for macOS
@@ -190,19 +169,12 @@ export default function Home() {
               </a>
             </motion.div>
 
-            <motion.div
+            <motion.p
               variants={fadeInUp}
-              className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-[var(--ink-muted)]"
+              className="text-sm text-[var(--ink-muted)]"
             >
-              <span className="inline-flex items-center gap-2">
-                <Star className="w-4 h-4" aria-hidden="true" />
-                Open source
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Monitor className="w-4 h-4" aria-hidden="true" />
-                macOS 15+ · Apple Silicon
-              </span>
-            </motion.div>
+              macOS 15+ · Apple Silicon
+            </motion.p>
           </motion.div>
 
           <motion.figure
@@ -271,8 +243,8 @@ export default function Home() {
           </div>
 
           <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-[1.2fr_1fr]">
-            <figure className="min-w-0 md:row-span-2">
-              <div className="product-frame">
+            <div className="menu-panel min-w-0 md:row-span-2">
+              <div className="product-frame menu-frame">
                 <Image
                   src="/images/menubar-menu.png"
                   alt="SpineSpy open in the menu bar: Pause Monitoring, the next capture time, camera off, and Interval, Settings, Calibrate, Save Snapshot, Test Alert, and Quit."
@@ -281,29 +253,29 @@ export default function Home() {
                   className="block w-full h-auto"
                 />
               </div>
-            </figure>
-            <figure className="min-w-0">
+            </div>
+            <div className="min-w-0">
               <div className="product-frame posture-frame">
                 <Image
                   src="/images/posture-good.png"
                   alt="Notification: Sitting nice and straight, with the ferret in the menu bar."
                   width={928}
                   height={480}
-                  className="block w-full h-auto"
+                  className="block w-full"
                 />
               </div>
-            </figure>
-            <figure className="min-w-0">
+            </div>
+            <div className="min-w-0">
               <div className="product-frame posture-frame">
                 <Image
                   src="/images/posture-shrimp.png"
                   alt="Notification: You're being a shrimp, my friend, with the shrimp in the menu bar."
                   width={898}
                   height={400}
-                  className="block w-full h-auto"
+                  className="block w-full"
                 />
               </div>
-            </figure>
+            </div>
           </div>
           <p className="mt-6 max-w-xl text-[var(--ink-muted)]">
             Five bad checks in a row, and it calls you a shrimp.
@@ -379,16 +351,6 @@ export default function Home() {
               </p>
             </li>
           </ol>
-
-          <a
-            href={SOURCE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-10 font-semibold hover:underline"
-          >
-            <Github className="w-4 h-4" aria-hidden="true" />
-            Verify it in the source
-          </a>
         </div>
       </section>
 
@@ -399,21 +361,16 @@ export default function Home() {
             <span className="emphasis">one quiet nudge at a time.</span>
           </h2>
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
-            Free, open source, and built so camera data stays on your Mac.
+            Get lifetime access with a one-time purchase. Camera data stays on your Mac.
           </p>
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
               <Download className="w-5 h-5" aria-hidden="true" />
               Download for macOS
             </a>
-            <a
-              href={SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary"
-            >
-              <Github className="w-5 h-5" aria-hidden="true" />
-              Star on GitHub
+            <a href="#demo" className="btn-secondary">
+              <Play className="w-4 h-4" aria-hidden="true" />
+              Watch demo
             </a>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">macOS 15+ · Apple Silicon</p>
@@ -460,10 +417,22 @@ export default function Home() {
             </details>
             <details className="faq-item group">
               <summary className="faq-question">
-                Is SpineSpy a local macOS posture app?
+                What are the system requirements?
               </summary>
               <div className="faq-answer">
-                Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.
+                SpineSpy requires macOS 15 or later and runs on Apple Silicon Macs.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                Is there a refund policy?
+              </summary>
+              <div className="faq-answer">
+                Yes. You can request a refund within 14 days of purchase. See our{" "}
+                <a href="/refund-policy" className="text-blue-600 hover:underline">
+                  Refund Policy
+                </a>{" "}
+                for details.
               </div>
             </details>
           </div>
@@ -471,36 +440,36 @@ export default function Home() {
       </section>
 
       <footer className="section-rule py-10">
-        <div className="container-wide flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/ferret.webp"
-              alt=""
-              width={89}
-              height={128}
-              className="w-8 h-10 object-contain"
-            />
-            <div>
-              <div className="font-semibold">SpineSpy</div>
-              <div className="text-sm text-[var(--ink-muted)]">Made for better posture</div>
+        <div className="container-wide">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/images/ferret.webp"
+                alt=""
+                width={89}
+                height={128}
+                className="w-8 h-10 object-contain"
+              />
+              <div>
+                <div className="font-semibold">SpineSpy</div>
+                <div className="text-sm text-[var(--ink-muted)]">Made for better posture</div>
+              </div>
             </div>
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--ink-muted)]">
+              <a href="/privacy-policy" className="hover:text-[var(--ink)]">
+                Privacy Policy
+              </a>
+              <a href="/terms-of-service" className="hover:text-[var(--ink)]">
+                Terms of Service
+              </a>
+              <a href="/refund-policy" className="hover:text-[var(--ink)]">
+                Refund Policy
+              </a>
+            </nav>
           </div>
-          <nav className="flex items-center gap-5 text-sm text-[var(--ink-muted)]">
-            <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--ink)]">
-              GitHub
-            </a>
-            <a href="https://github.com/jananadiw/spinespy/releases" className="hover:text-[var(--ink)]">
-              Releases
-            </a>
-            <a
-              href="https://github.com/jananadiw/spinespy/blob/main/LICENSE"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--ink)]"
-            >
-              MIT License
-            </a>
-          </nav>
+          <div className="text-xs text-[var(--ink-muted)] text-center sm:text-left">
+            © {new Date().getFullYear()} SpineSpy. All rights reserved.
+          </div>
         </div>
       </footer>
     </main>
