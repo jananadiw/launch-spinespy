@@ -1,9 +1,9 @@
 import {
-  DOWNLOAD_URL,
   PRODUCTION_SITE_ORIGIN,
   PRODUCTION_SITE_URL,
   SITE_DESCRIPTION,
   SOCIAL_IMAGE_PATH,
+  DOWNLOAD_URL,
 } from "./site";
 
 export function buildStructuredData() {
@@ -25,11 +25,6 @@ export function buildStructuredData() {
         url: PRODUCTION_SITE_URL,
         image: `${PRODUCTION_SITE_ORIGIN}${SOCIAL_IMAGE_PATH}`,
         downloadUrl: DOWNLOAD_URL,
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "USD",
-        },
         brand: {
           "@id": `${PRODUCTION_SITE_ORIGIN}/#organization`,
         },
@@ -71,10 +66,10 @@ export function buildStructuredData() {
           },
           {
             "@type": "Question",
-            name: "Is SpineSpy a local macOS posture app?",
+            name: "What are the system requirements?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.",
+              text: "SpineSpy requires macOS 15 or later and runs on Apple Silicon Macs.",
             },
           },
         ],

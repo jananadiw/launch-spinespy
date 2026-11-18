@@ -12,6 +12,10 @@ export const DOWNLOAD_URL =
 
 export const SOCIAL_IMAGE_PATH = "/images/posture-good.png";
 
+export const SUPPORT_EMAIL = "support@spinespy.com";
+
+export const MAX_ACTIVATIONS = 3;
+
 export function isProductionHost(host: string | null): boolean {
   if (!host) return false;
   const normalized = host.split(":")[0].toLowerCase();
