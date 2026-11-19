@@ -10,7 +10,7 @@ export const SITE_DESCRIPTION =
 export const SPINESPY_PRICE_USD = 9.99;
 
 export const DOWNLOAD_URL =
-  "https://github.com/jananadiw/spinespy/releases/download/v1.3.3/SpineSpy.dmg";
+  "https://github.com/jananadiw/launch-spinespy/releases/latest/download/SpineSpy.dmg";
 
 export const SOCIAL_IMAGE_PATH = "/images/posture-good.png";
 
