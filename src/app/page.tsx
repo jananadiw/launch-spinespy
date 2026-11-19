@@ -4,20 +4,17 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import {
   Bell,
+  Check,
+  CreditCard,
   Download,
   Eye,
-  Github,
-  Monitor,
   Play,
   Shield,
   Smartphone,
-  Star,
 } from "lucide-react";
 import Image from "next/image";
-
-const DOWNLOAD_URL =
-  "https://github.com/jananadiw/spinespy/releases/download/v1.3.3/SpineSpy.dmg";
-const SOURCE_URL = "https://github.com/jananadiw/spinespy";
+import { CheckoutForm } from "@/components/checkout-form";
+import { DOWNLOAD_URL, SPINESPY_PRICE_USD } from "@/lib/site";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -33,7 +30,7 @@ const features = [
     icon: Eye,
     title: "Posture",
     description:
-      "Spots forward slouch and side tilt from a single frame, not a continuous camera feed.",
+      "Notices posture patterns from a single frame, without running a continuous camera feed.",
   },
   {
     icon: Smartphone,
@@ -45,7 +42,7 @@ const features = [
     icon: Bell,
     title: "Smart Alerts",
     description:
-      "Waits for five bad snapshots in a row before it makes a sound. No alert fatigue.",
+      "Waits for a pattern across multiple checks before reminding you to adjust or move.",
   },
   {
     icon: Shield,
@@ -59,7 +56,7 @@ const steps = [
   {
     title: "Periodic snapshots",
     description:
-      "SpineSpy opens the camera on the interval you set: 10 minutes, 20 minutes, 30 minutes, or 1 hour.",
+      "SpineSpy checks in at the interval you set, giving you time to work without constant interruptions.",
   },
   {
     title: "Local analysis",
@@ -69,12 +66,12 @@ const steps = [
   {
     title: "Menubar status",
     description:
-      "The icon switches when your posture changes, so you can read it without opening the menu.",
+      "Your posture buddy icon changes with your posture, so you can read it without opening the menu.",
   },
   {
     title: "Smart alert",
     description:
-      "After five consecutive bad snapshots, you get one reminder to straighten up.",
+      "After multiple checks, you get one reminder to adjust your posture or change positions.",
   },
 ];
 
@@ -117,19 +114,9 @@ export default function Home() {
           <a href="#top" className="font-semibold text-lg tracking-tight">
             SpineSpy
           </a>
-          <div className="flex items-center gap-3 sm:gap-4">
-            <a
-              href={SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-source"
-            >
-              <Github className="w-5 h-5" aria-hidden="true" />
-              <span className="hidden sm:block">
-                <span className="text-sm font-semibold leading-tight">GitHub</span>
-                <span className="nav-source-sub">View source</span>
-              </span>
-              <span className="sr-only sm:hidden">GitHub, view source</span>
+          <div className="flex items-center gap-4">
+            <a href="#pricing" className="hidden text-sm font-medium sm:inline">
+              Pricing
             </a>
             <a
               href={DOWNLOAD_URL}
@@ -166,20 +153,20 @@ export default function Home() {
               variants={fadeInUp}
               className="text-5xl sm:text-6xl font-semibold leading-[1.05] mb-6 text-balance"
             >
-              Catch the slouch
-              <span className="emphasis block">before your back does</span>
+              Meet your
+              <span className="emphasis block">posture buddy</span>
             </motion.h1>
 
             <motion.p
               variants={fadeInUp}
               className="text-lg text-[var(--ink-muted)] mb-8 max-w-xl leading-relaxed"
             >
-              SpineSpy checks your posture in short intervals, then stays out of
-              the way. It waits for five bad snapshots in a row before it nudges
-              you. Local, in the menubar.
+              SpineSpy checks your posture at set intervals, offers simple suggestions, and reminds
+              you to keep moving throughout the workday. Everything runs locally on your Mac, from
+              the menubar.
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-8">
+            <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-6">
               <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
                 <Download className="w-5 h-5" aria-hidden="true" />
                 Download for macOS
@@ -190,19 +177,12 @@ export default function Home() {
               </a>
             </motion.div>
 
-            <motion.div
+            <motion.p
               variants={fadeInUp}
-              className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-[var(--ink-muted)]"
+              className="text-sm text-[var(--ink-muted)]"
             >
-              <span className="inline-flex items-center gap-2">
-                <Star className="w-4 h-4" aria-hidden="true" />
-                Open source
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Monitor className="w-4 h-4" aria-hidden="true" />
-                macOS 15+ · Apple Silicon
-              </span>
-            </motion.div>
+              macOS 15+ · Apple Silicon
+            </motion.p>
           </motion.div>
 
           <motion.figure
@@ -230,10 +210,9 @@ export default function Home() {
               See SpineSpy in action
             </h2>
             <p id="demo-description" className="text-lg text-[var(--ink-muted)] leading-relaxed">
-              SpineSpy sits in your menubar. Calibrate your preferred posture
-              before you start monitoring, then leave it running. It checks you
-              on the interval you set and nudges you only after five bad
-              snapshots in a row.
+              SpineSpy sits in your menubar. Answer the welcome questionnaire, calibrate your
+              preferred posture, then leave it running. It checks in throughout the day and nudges
+              you to adjust your posture or change positions when needed.
             </p>
           </div>
           <div className="product-frame min-w-0 bg-black">
@@ -262,17 +241,17 @@ export default function Home() {
         <div className="container-wide">
           <div className="max-w-2xl mb-10">
             <h2 id="compare-heading" className="text-4xl sm:text-5xl font-semibold leading-[1.1] mb-4">
-              Built for people who live at their computers
+              Built for people who lose track of time at their desks
             </h2>
             <p className="text-lg text-[var(--ink-muted)]">
-              After a long stretch of focus, your body pays the price. SpineSpy
-              keeps the check in the menubar.
+              After a long stretch of focus, your body often pays the price. SpineSpy is your
+              posture buddy, helping you keep moving and feel better through long work sessions.
             </p>
           </div>
 
           <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-[1.2fr_1fr]">
-            <figure className="min-w-0 md:row-span-2">
-              <div className="product-frame">
+            <div className="menu-panel min-w-0 md:row-span-2">
+              <div className="product-frame menu-frame">
                 <Image
                   src="/images/menubar-menu.png"
                   alt="SpineSpy open in the menu bar: Pause Monitoring, the next capture time, camera off, and Interval, Settings, Calibrate, Save Snapshot, Test Alert, and Quit."
@@ -281,32 +260,32 @@ export default function Home() {
                   className="block w-full h-auto"
                 />
               </div>
-            </figure>
-            <figure className="min-w-0">
+            </div>
+            <div className="min-w-0">
               <div className="product-frame posture-frame">
                 <Image
                   src="/images/posture-good.png"
                   alt="Notification: Sitting nice and straight, with the ferret in the menu bar."
                   width={928}
                   height={480}
-                  className="block w-full h-auto"
+                  className="block w-full"
                 />
               </div>
-            </figure>
-            <figure className="min-w-0">
+            </div>
+            <div className="min-w-0">
               <div className="product-frame posture-frame">
                 <Image
                   src="/images/posture-shrimp.png"
                   alt="Notification: You're being a shrimp, my friend, with the shrimp in the menu bar."
                   width={898}
                   height={400}
-                  className="block w-full h-auto"
+                  className="block w-full"
                 />
               </div>
-            </figure>
+            </div>
           </div>
           <p className="mt-6 max-w-xl text-[var(--ink-muted)]">
-            Five bad checks in a row, and it calls you a shrimp.
+            A quiet nudge when it is time to reset your position.
           </p>
         </div>
       </section>
@@ -324,6 +303,83 @@ export default function Home() {
                 <p className="text-[var(--ink-muted)] leading-relaxed">{description}</p>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="pricing"
+        className="section-rule scroll-mt-20 py-16 sm:py-24"
+        aria-labelledby="pricing-heading"
+      >
+        <div className="container-wide">
+          <div className="pricing-panel">
+            <div>
+              <h2
+                id="pricing-heading"
+                className="max-w-xl text-4xl font-semibold leading-[1.1] sm:text-5xl"
+              >
+                Buy once. Keep it for life.
+              </h2>
+              <p className="mt-4 max-w-lg text-lg leading-relaxed text-[var(--pricing-muted)]">
+                One simple payment gives you lifetime access to every SpineSpy feature. No
+                subscription and no recurring charge.
+              </p>
+              <ul className="mt-8 grid gap-3 text-sm sm:grid-cols-2">
+                {[
+                  "All features included",
+                  "Lifetime license",
+                  "14-day refund policy",
+                  "Built for macOS",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2.5">
+                    <Check className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pricing-purchase">
+              <p className="text-sm font-medium text-[var(--pricing-muted)]">Lifetime purchase</p>
+              <div className="mt-2 flex items-end gap-2">
+                <span className="price-amount">${SPINESPY_PRICE_USD.toFixed(2)}</span>
+                <span className="mb-2 text-sm text-[var(--pricing-muted)]">USD · one time</span>
+              </div>
+
+              <CheckoutForm
+                label="Get lifetime access"
+                formClassName="mt-6"
+                className="pricing-cta"
+              />
+              <p className="mt-3 text-xs leading-relaxed text-[var(--pricing-muted)]">
+                Secure checkout via Stripe. Tax is calculated at checkout.
+              </p>
+
+              <div className="mt-7 border-t border-white/15 pt-6">
+                <p className="flex items-center gap-2 text-sm font-medium">
+                  <CreditCard className="h-4 w-4" aria-hidden="true" />
+                  Supported payment methods
+                </p>
+                <div className="payment-methods mt-3" aria-label="Visa, Mastercard, American Express, and Apple Pay">
+                  <span>Visa</span>
+                  <span>Mastercard</span>
+                  <span>Amex</span>
+                  <span>Apple Pay</span>
+                </div>
+              </div>
+
+              <p className="mt-7 text-sm text-[var(--pricing-muted)]">
+                Already purchased?{" "}
+                <a
+                  href={DOWNLOAD_URL}
+                  download="SpineSpy.dmg"
+                  className="font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+                >
+                  Download for macOS
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -379,41 +435,26 @@ export default function Home() {
               </p>
             </li>
           </ol>
-
-          <a
-            href={SOURCE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 mt-10 font-semibold hover:underline"
-          >
-            <Github className="w-4 h-4" aria-hidden="true" />
-            Verify it in the source
-          </a>
         </div>
       </section>
 
       <section className="section-rule py-16 sm:py-24">
         <div className="container-wide max-w-3xl">
           <h2 className="text-4xl sm:text-5xl font-semibold leading-[1.08] mb-4 text-balance">
-            Better posture,{" "}
-            <span className="emphasis">one quiet nudge at a time.</span>
+            Feel better at your desk,{" "}
+            <span className="emphasis">one movement at a time.</span>
           </h2>
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
-            Free, open source, and built so camera data stays on your Mac.
+            Get lifetime access with a one-time purchase. Camera data stays on your Mac.
           </p>
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
               <Download className="w-5 h-5" aria-hidden="true" />
               Download for macOS
             </a>
-            <a
-              href={SOURCE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary"
-            >
-              <Github className="w-5 h-5" aria-hidden="true" />
-              Star on GitHub
+            <a href="#demo" className="btn-secondary">
+              <Play className="w-4 h-4" aria-hidden="true" />
+              Watch demo
             </a>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">macOS 15+ · Apple Silicon</p>
@@ -447,7 +488,8 @@ export default function Home() {
                 How often does it check?
               </summary>
               <div className="faq-answer">
-                You pick 10, 20, or 30 minutes, or 1 hour.
+                You choose the check-in interval in the app. Each check is brief, and SpineSpy stays
+                out of the way between snapshots.
               </div>
             </details>
             <details className="faq-item group">
@@ -455,15 +497,37 @@ export default function Home() {
                 When does it nudge you?
               </summary>
               <div className="faq-answer">
-                After five bad snapshots in a row. One reminder, then it waits.
+                SpineSpy waits for a pattern across multiple checks before sending one reminder to
+                adjust your posture or change positions.
               </div>
             </details>
             <details className="faq-item group">
               <summary className="faq-question">
-                Is SpineSpy a local macOS posture app?
+                How much does SpineSpy cost?
               </summary>
               <div className="faq-answer">
-                Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.
+                SpineSpy is ${SPINESPY_PRICE_USD.toFixed(2)} USD as a one-time purchase. There is no
+                subscription. Tax is calculated at checkout.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                What are the system requirements?
+              </summary>
+              <div className="faq-answer">
+                SpineSpy requires macOS 15 or later and runs on Apple Silicon Macs.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                Is there a refund policy?
+              </summary>
+              <div className="faq-answer">
+                Yes. You can request a refund within 14 days of purchase. See our{" "}
+                <a href="/refund-policy" className="text-blue-600 hover:underline">
+                  Refund Policy
+                </a>{" "}
+                for details.
               </div>
             </details>
           </div>
@@ -471,36 +535,36 @@ export default function Home() {
       </section>
 
       <footer className="section-rule py-10">
-        <div className="container-wide flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/ferret.webp"
-              alt=""
-              width={89}
-              height={128}
-              className="w-8 h-10 object-contain"
-            />
-            <div>
-              <div className="font-semibold">SpineSpy</div>
-              <div className="text-sm text-[var(--ink-muted)]">Made for better posture</div>
+        <div className="container-wide">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/images/ferret.webp"
+                alt=""
+                width={89}
+                height={128}
+                className="w-8 h-10 object-contain"
+              />
+              <div>
+                <div className="font-semibold">SpineSpy</div>
+                <div className="text-sm text-[var(--ink-muted)]">Made to keep you moving</div>
+              </div>
             </div>
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--ink-muted)]">
+              <a href="/privacy-policy" className="hover:text-[var(--ink)]">
+                Privacy Policy
+              </a>
+              <a href="/terms-of-service" className="hover:text-[var(--ink)]">
+                Terms of Service
+              </a>
+              <a href="/refund-policy" className="hover:text-[var(--ink)]">
+                Refund Policy
+              </a>
+            </nav>
           </div>
-          <nav className="flex items-center gap-5 text-sm text-[var(--ink-muted)]">
-            <a href={SOURCE_URL} target="_blank" rel="noopener noreferrer" className="hover:text-[var(--ink)]">
-              GitHub
-            </a>
-            <a href="https://github.com/jananadiw/spinespy/releases" className="hover:text-[var(--ink)]">
-              Releases
-            </a>
-            <a
-              href="https://github.com/jananadiw/spinespy/blob/main/LICENSE"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[var(--ink)]"
-            >
-              MIT License
-            </a>
-          </nav>
+          <div className="text-xs text-[var(--ink-muted)] text-center sm:text-left">
+            © {new Date().getFullYear()} SpineSpy. All rights reserved.
+          </div>
         </div>
       </footer>
     </main>

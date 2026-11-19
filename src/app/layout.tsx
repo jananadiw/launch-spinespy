@@ -33,10 +33,10 @@ const socialImage = {
   alt: "SpineSpy menubar notification: Sitting nice and straight.",
 };
 
-const pageTitle = "SpineSpy | Catch the slouch before your back does";
+const pageTitle = "SpineSpy | Meet your posture buddy";
 
 const openGraphDescription =
-  "Brief posture checks, smart consecutive alerts, and no camera data leaving your Mac.";
+  "Brief local posture checks and quiet reminders to adjust and keep moving through the workday.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();

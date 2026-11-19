@@ -5,12 +5,18 @@ export const PRODUCTION_SITE_ORIGIN = "https://www.spinespy.com";
 export const PRODUCTION_HOSTS = new Set(["www.spinespy.com", "spinespy.com"]);
 
 export const SITE_DESCRIPTION =
-  "A local macOS menubar app that catches slouching and phone distractions with brief camera checks. Nothing is uploaded.";
+  "A local macOS menubar app that checks posture at intervals and reminds desk workers to adjust and keep moving. Nothing is uploaded.";
+
+export const SPINESPY_PRICE_USD = 9.99;
 
 export const DOWNLOAD_URL =
-  "https://github.com/jananadiw/spinespy/releases/download/v1.3.3/SpineSpy.dmg";
+  "https://github.com/jananadiw/launch-spinespy/releases/latest/download/SpineSpy.dmg";
 
 export const SOCIAL_IMAGE_PATH = "/images/posture-good.png";
+
+export const SUPPORT_EMAIL = "support@spinespy.com";
+
+export const MAX_ACTIVATIONS = 3;
 
 export function isProductionHost(host: string | null): boolean {
   if (!host) return false;

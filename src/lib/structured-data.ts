@@ -1,9 +1,10 @@
 import {
-  DOWNLOAD_URL,
   PRODUCTION_SITE_ORIGIN,
   PRODUCTION_SITE_URL,
   SITE_DESCRIPTION,
   SOCIAL_IMAGE_PATH,
+  DOWNLOAD_URL,
+  SPINESPY_PRICE_USD,
 } from "./site";
 
 export function buildStructuredData() {
@@ -27,8 +28,15 @@ export function buildStructuredData() {
         downloadUrl: DOWNLOAD_URL,
         offers: {
           "@type": "Offer",
-          price: "0",
+          price: SPINESPY_PRICE_USD.toFixed(2),
           priceCurrency: "USD",
+          url: `${PRODUCTION_SITE_URL}/#pricing`,
+          priceSpecification: {
+            "@type": "PriceSpecification",
+            price: SPINESPY_PRICE_USD.toFixed(2),
+            priceCurrency: "USD",
+            valueAddedTaxIncluded: false,
+          },
         },
         brand: {
           "@id": `${PRODUCTION_SITE_ORIGIN}/#organization`,
@@ -58,7 +66,7 @@ export function buildStructuredData() {
             name: "How often does it check?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "You pick 10, 20, or 30 minutes, or 1 hour.",
+              text: "You choose the check-in interval in the app. Each check is brief, and SpineSpy stays out of the way between snapshots.",
             },
           },
           {
@@ -66,15 +74,15 @@ export function buildStructuredData() {
             name: "When does it nudge you?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "After five bad snapshots in a row. One reminder, then it waits.",
+              text: "SpineSpy waits for a pattern across multiple checks before sending one reminder to adjust your posture or change positions.",
             },
           },
           {
             "@type": "Question",
-            name: "Is SpineSpy a local macOS posture app?",
+            name: "What are the system requirements?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Yes. It is a free, open source menubar app for Apple Silicon on macOS 15 or later.",
+              text: "SpineSpy requires macOS 15 or later and runs on Apple Silicon Macs.",
             },
           },
         ],
