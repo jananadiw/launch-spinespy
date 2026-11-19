@@ -7,6 +7,8 @@ export const PRODUCTION_HOSTS = new Set(["www.spinespy.com", "spinespy.com"]);
 export const SITE_DESCRIPTION =
   "A local macOS menubar app that catches slouching and phone distractions with brief camera checks. Nothing is uploaded.";
 
+export const SPINESPY_PRICE_USD = 9.99;
+
 export const DOWNLOAD_URL =
   "https://github.com/jananadiw/spinespy/releases/download/v1.3.3/SpineSpy.dmg";
 

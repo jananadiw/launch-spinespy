@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import {
   Bell,
+  Check,
+  CreditCard,
   Download,
   Eye,
   Play,
@@ -11,7 +13,8 @@ import {
   Smartphone,
 } from "lucide-react";
 import Image from "next/image";
-import { DOWNLOAD_URL } from "@/lib/site";
+import { CheckoutForm } from "@/components/checkout-form";
+import { DOWNLOAD_URL, SPINESPY_PRICE_USD } from "@/lib/site";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -111,14 +114,19 @@ export default function Home() {
           <a href="#top" className="font-semibold text-lg tracking-tight">
             SpineSpy
           </a>
-          <a
-            href={DOWNLOAD_URL}
-            download="SpineSpy.dmg"
-            className="btn-primary btn-compact"
-          >
-            <Download className="w-4 h-4" aria-hidden="true" />
-            Download
-          </a>
+          <div className="flex items-center gap-4">
+            <a href="#pricing" className="hidden text-sm font-medium sm:inline">
+              Pricing
+            </a>
+            <a
+              href={DOWNLOAD_URL}
+              download="SpineSpy.dmg"
+              className="btn-primary btn-compact"
+            >
+              <Download className="w-4 h-4" aria-hidden="true" />
+              Download
+            </a>
+          </div>
         </div>
       </motion.header>
 
@@ -300,6 +308,83 @@ export default function Home() {
         </div>
       </section>
 
+      <section
+        id="pricing"
+        className="section-rule scroll-mt-20 py-16 sm:py-24"
+        aria-labelledby="pricing-heading"
+      >
+        <div className="container-wide">
+          <div className="pricing-panel">
+            <div>
+              <h2
+                id="pricing-heading"
+                className="max-w-xl text-4xl font-semibold leading-[1.1] sm:text-5xl"
+              >
+                Buy once. Keep it for life.
+              </h2>
+              <p className="mt-4 max-w-lg text-lg leading-relaxed text-[var(--pricing-muted)]">
+                One simple payment gives you lifetime access to every SpineSpy feature. No
+                subscription and no recurring charge.
+              </p>
+              <ul className="mt-8 grid gap-3 text-sm sm:grid-cols-2">
+                {[
+                  "All features included",
+                  "Lifetime license",
+                  "14-day refund policy",
+                  "Built for macOS",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-2.5">
+                    <Check className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="pricing-purchase">
+              <p className="text-sm font-medium text-[var(--pricing-muted)]">Lifetime purchase</p>
+              <div className="mt-2 flex items-end gap-2">
+                <span className="price-amount">${SPINESPY_PRICE_USD.toFixed(2)}</span>
+                <span className="mb-2 text-sm text-[var(--pricing-muted)]">USD · one time</span>
+              </div>
+
+              <CheckoutForm
+                label="Get lifetime access"
+                formClassName="mt-6"
+                className="pricing-cta"
+              />
+              <p className="mt-3 text-xs leading-relaxed text-[var(--pricing-muted)]">
+                Secure checkout via Stripe. Tax is calculated at checkout.
+              </p>
+
+              <div className="mt-7 border-t border-white/15 pt-6">
+                <p className="flex items-center gap-2 text-sm font-medium">
+                  <CreditCard className="h-4 w-4" aria-hidden="true" />
+                  Supported payment methods
+                </p>
+                <div className="payment-methods mt-3" aria-label="Visa, Mastercard, American Express, and Apple Pay">
+                  <span>Visa</span>
+                  <span>Mastercard</span>
+                  <span>Amex</span>
+                  <span>Apple Pay</span>
+                </div>
+              </div>
+
+              <p className="mt-7 text-sm text-[var(--pricing-muted)]">
+                Already purchased?{" "}
+                <a
+                  href={DOWNLOAD_URL}
+                  download="SpineSpy.dmg"
+                  className="font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+                >
+                  Download for macOS
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section-rule py-16 sm:py-24" aria-labelledby="how-heading">
         <div className="container-wide">
           <h2 id="how-heading" className="text-4xl sm:text-5xl font-semibold leading-[1.1] mb-3">
@@ -413,6 +498,15 @@ export default function Home() {
               </summary>
               <div className="faq-answer">
                 After five bad snapshots in a row. One reminder, then it waits.
+              </div>
+            </details>
+            <details className="faq-item group">
+              <summary className="faq-question">
+                How much does SpineSpy cost?
+              </summary>
+              <div className="faq-answer">
+                SpineSpy is ${SPINESPY_PRICE_USD.toFixed(2)} USD as a one-time purchase. There is no
+                subscription. Tax is calculated at checkout.
               </div>
             </details>
             <details className="faq-item group">
