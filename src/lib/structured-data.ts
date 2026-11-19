@@ -66,7 +66,7 @@ export function buildStructuredData() {
             name: "How often does it check?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "You pick 10, 20, or 30 minutes, or 1 hour.",
+              text: "You choose the check-in interval in the app. Each check is brief, and SpineSpy stays out of the way between snapshots.",
             },
           },
           {
@@ -74,7 +74,7 @@ export function buildStructuredData() {
             name: "When does it nudge you?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "After five bad snapshots in a row. One reminder, then it waits.",
+              text: "SpineSpy waits for a pattern across multiple checks before sending one reminder to adjust your posture or change positions.",
             },
           },
           {

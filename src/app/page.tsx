@@ -30,7 +30,7 @@ const features = [
     icon: Eye,
     title: "Posture",
     description:
-      "Spots forward slouch and side tilt from a single frame, not a continuous camera feed.",
+      "Notices posture patterns from a single frame, without running a continuous camera feed.",
   },
   {
     icon: Smartphone,
@@ -42,7 +42,7 @@ const features = [
     icon: Bell,
     title: "Smart Alerts",
     description:
-      "Waits for five bad snapshots in a row before it makes a sound. No alert fatigue.",
+      "Waits for a pattern across multiple checks before reminding you to adjust or move.",
   },
   {
     icon: Shield,
@@ -56,7 +56,7 @@ const steps = [
   {
     title: "Periodic snapshots",
     description:
-      "SpineSpy opens the camera on the interval you set: 10 minutes, 20 minutes, 30 minutes, or 1 hour.",
+      "SpineSpy checks in at the interval you set, giving you time to work without constant interruptions.",
   },
   {
     title: "Local analysis",
@@ -66,12 +66,12 @@ const steps = [
   {
     title: "Menubar status",
     description:
-      "The icon switches when your posture changes, so you can read it without opening the menu.",
+      "Your posture buddy icon changes with your posture, so you can read it without opening the menu.",
   },
   {
     title: "Smart alert",
     description:
-      "After five consecutive bad snapshots, you get one reminder to straighten up.",
+      "After multiple checks, you get one reminder to adjust your posture or change positions.",
   },
 ];
 
@@ -153,17 +153,17 @@ export default function Home() {
               variants={fadeInUp}
               className="text-5xl sm:text-6xl font-semibold leading-[1.05] mb-6 text-balance"
             >
-              Catch the slouch
-              <span className="emphasis block">before your back does</span>
+              Meet your
+              <span className="emphasis block">posture buddy</span>
             </motion.h1>
 
             <motion.p
               variants={fadeInUp}
               className="text-lg text-[var(--ink-muted)] mb-8 max-w-xl leading-relaxed"
             >
-              SpineSpy checks your posture in short intervals, then stays out of
-              the way. It waits for five bad snapshots in a row before it nudges
-              you. Local, in the menubar.
+              SpineSpy checks your posture at set intervals, offers simple suggestions, and reminds
+              you to keep moving throughout the workday. Everything runs locally on your Mac, from
+              the menubar.
             </motion.p>
 
             <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-6">
@@ -210,10 +210,9 @@ export default function Home() {
               See SpineSpy in action
             </h2>
             <p id="demo-description" className="text-lg text-[var(--ink-muted)] leading-relaxed">
-              SpineSpy sits in your menubar. Calibrate your preferred posture
-              before you start monitoring, then leave it running. It checks you
-              on the interval you set and nudges you only after five bad
-              snapshots in a row.
+              SpineSpy sits in your menubar. Answer the welcome questionnaire, calibrate your
+              preferred posture, then leave it running. It checks in throughout the day and nudges
+              you to adjust your posture or change positions when needed.
             </p>
           </div>
           <div className="product-frame min-w-0 bg-black">
@@ -242,11 +241,11 @@ export default function Home() {
         <div className="container-wide">
           <div className="max-w-2xl mb-10">
             <h2 id="compare-heading" className="text-4xl sm:text-5xl font-semibold leading-[1.1] mb-4">
-              Built for people who live at their computers
+              Built for people who lose track of time at their desks
             </h2>
             <p className="text-lg text-[var(--ink-muted)]">
-              After a long stretch of focus, your body pays the price. SpineSpy
-              keeps the check in the menubar.
+              After a long stretch of focus, your body often pays the price. SpineSpy is your
+              posture buddy, helping you keep moving and feel better through long work sessions.
             </p>
           </div>
 
@@ -286,7 +285,7 @@ export default function Home() {
             </div>
           </div>
           <p className="mt-6 max-w-xl text-[var(--ink-muted)]">
-            Five bad checks in a row, and it calls you a shrimp.
+            A quiet nudge when it is time to reset your position.
           </p>
         </div>
       </section>
@@ -442,8 +441,8 @@ export default function Home() {
       <section className="section-rule py-16 sm:py-24">
         <div className="container-wide max-w-3xl">
           <h2 className="text-4xl sm:text-5xl font-semibold leading-[1.08] mb-4 text-balance">
-            Better posture,{" "}
-            <span className="emphasis">one quiet nudge at a time.</span>
+            Feel better at your desk,{" "}
+            <span className="emphasis">one movement at a time.</span>
           </h2>
           <p className="text-lg text-[var(--ink-muted)] mb-8 max-w-lg">
             Get lifetime access with a one-time purchase. Camera data stays on your Mac.
@@ -489,7 +488,8 @@ export default function Home() {
                 How often does it check?
               </summary>
               <div className="faq-answer">
-                You pick 10, 20, or 30 minutes, or 1 hour.
+                You choose the check-in interval in the app. Each check is brief, and SpineSpy stays
+                out of the way between snapshots.
               </div>
             </details>
             <details className="faq-item group">
@@ -497,7 +497,8 @@ export default function Home() {
                 When does it nudge you?
               </summary>
               <div className="faq-answer">
-                After five bad snapshots in a row. One reminder, then it waits.
+                SpineSpy waits for a pattern across multiple checks before sending one reminder to
+                adjust your posture or change positions.
               </div>
             </details>
             <details className="faq-item group">
@@ -546,7 +547,7 @@ export default function Home() {
               />
               <div>
                 <div className="font-semibold">SpineSpy</div>
-                <div className="text-sm text-[var(--ink-muted)]">Made for better posture</div>
+                <div className="text-sm text-[var(--ink-muted)]">Made to keep you moving</div>
               </div>
             </div>
             <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--ink-muted)]">
