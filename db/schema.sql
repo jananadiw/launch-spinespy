@@ -1,47 +1,27 @@
--- SpineSpy License Database Schema
--- Run this migration on your Postgres database (Vercel Postgres or Neon)
+-- SpineSpy license schema (Phase 2, not applied yet).
+-- Matches the LicenseStore interface in src/lib/license/types.ts.
+-- Apply with: psql "$DATABASE_URL" -f db/schema.sql
 
 CREATE TABLE IF NOT EXISTS licenses (
-  id SERIAL PRIMARY KEY,
-  key VARCHAR(255) NOT NULL UNIQUE,
-  email VARCHAR(255) NOT NULL,
-  session_id VARCHAR(255) NOT NULL UNIQUE,
-  status VARCHAR(50) NOT NULL DEFAULT 'active',
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  revoked_at TIMESTAMP
+  id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  key                   TEXT NOT NULL UNIQUE,              -- SPY-XXXX-XXXX-XXXX
+  email                 TEXT NOT NULL,                     -- from Stripe Checkout; the buyer's only identity
+  status                TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'revoked')),
+  stripe_session_id     TEXT NOT NULL UNIQUE,              -- fulfillment is idempotent on this
+  stripe_payment_intent TEXT,                              -- refunds revoke by this
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+  revoked_at            TIMESTAMPTZ,
+  email_sent_at         TIMESTAMPTZ                        -- null until the key email is sent
 );
 
-CREATE INDEX idx_licenses_key ON licenses(key);
-CREATE INDEX idx_licenses_session_id ON licenses(session_id);
-CREATE INDEX idx_licenses_email ON licenses(email);
-CREATE INDEX idx_licenses_status ON licenses(status);
+CREATE INDEX IF NOT EXISTS licenses_email_lower_idx ON licenses (lower(email));
+CREATE INDEX IF NOT EXISTS licenses_payment_intent_idx ON licenses (stripe_payment_intent);
 
 CREATE TABLE IF NOT EXISTS activations (
-  id SERIAL PRIMARY KEY,
-  license_key VARCHAR(255) NOT NULL,
-  device_id_hash VARCHAR(255) NOT NULL,
-  instance_id VARCHAR(255) NOT NULL UNIQUE,
-  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  last_seen TIMESTAMP NOT NULL DEFAULT NOW(),
-  FOREIGN KEY (license_key) REFERENCES licenses(key) ON DELETE CASCADE
+  license_id        UUID NOT NULL REFERENCES licenses (id) ON DELETE CASCADE,
+  device_id         TEXT NOT NULL,
+  device_name       TEXT NOT NULL,
+  activated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_validated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (license_id, device_id)
 );
-
-CREATE INDEX idx_activations_license_key ON activations(license_key);
-CREATE INDEX idx_activations_device_id_hash ON activations(device_id_hash);
-CREATE INDEX idx_activations_instance_id ON activations(instance_id);
-
--- Add a unique constraint to prevent duplicate device activations
-CREATE UNIQUE INDEX idx_activations_license_device ON activations(license_key, device_id_hash);
-
--- Table for tracking webhook processing to ensure idempotency
-CREATE TABLE IF NOT EXISTS webhook_events (
-  id SERIAL PRIMARY KEY,
-  event_id VARCHAR(255) NOT NULL UNIQUE,
-  event_type VARCHAR(255) NOT NULL,
-  processed_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  session_id VARCHAR(255)
-);
-
-CREATE INDEX idx_webhook_events_event_id ON webhook_events(event_id);
-CREATE INDEX idx_webhook_events_session_id ON webhook_events(session_id);
