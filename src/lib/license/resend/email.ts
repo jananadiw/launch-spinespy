@@ -1,20 +1,42 @@
-import { NotImplementedError, type EmailProvider } from "../types";
+import { Resend } from "resend";
+import { requireEnv } from "../config";
+import { renderLicenseEmail } from "../email-template";
+import type { EmailProvider } from "../types";
+
+type ResendLike = Pick<Resend, "emails">;
+
+let client: Resend | null = null;
+let clientKey: string | null = null;
+
+function getResend(): ResendLike {
+  const key = requireEnv("RESEND_API_KEY");
+  if (!client || clientKey !== key) {
+    client = new Resend(key);
+    clientKey = key;
+  }
+  return client;
+}
 
 /**
- * Real license email via Resend. Phase 2.
- *
- * TODO(phase2): Implement with the `resend` SDK (already a dependency):
- *   - const { subject, html, text } = renderLicenseEmail({ key })  // ../email-template
- *   - await new Resend(process.env.RESEND_API_KEY).emails.send({
- *       from: `SpineSpy <${process.env.LICENSE_FROM_EMAIL}>`,  // hello@spinespy.com
- *       to: email, subject, html, text,
- *     })
- *   - The SDK returns { data, error } instead of throwing. Throw on `error`
- *     so fulfillment leaves emailSentAt empty and the Stripe retry sends again.
- *   - Verify the spinespy.com domain in Resend (SPF/DKIM DNS records) first.
+ * Real license email via Resend. The SDK returns { data, error } instead of
+ * throwing, so an error is rethrown: fulfillment then leaves emailSentAt empty
+ * and Stripe's webhook retry sends again.
  */
-export const resendEmailProvider: EmailProvider = {
-  async sendLicenseEmail() {
-    throw new NotImplementedError("Resend email");
-  },
-};
+export function createResendEmailProvider(resend: () => ResendLike = getResend): EmailProvider {
+  return {
+    async sendLicenseEmail({ email, key }) {
+      const from = requireEnv("LICENSE_FROM_EMAIL");
+      const { subject, html, text } = renderLicenseEmail({ key });
+      const { error } = await resend().emails.send({
+        from: `SpineSpy <${from}>`,
+        to: email,
+        subject,
+        html,
+        text,
+      });
+      if (error) throw new Error(`Resend failed: ${error.name}: ${error.message}`);
+    },
+  };
+}
+
+export const resendEmailProvider = createResendEmailProvider();

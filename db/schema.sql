@@ -1,6 +1,6 @@
--- SpineSpy license schema (Phase 2, not applied yet).
+-- SpineSpy license schema.
 -- Matches the LicenseStore interface in src/lib/license/types.ts.
--- Apply with: psql "$DATABASE_URL" -f db/schema.sql
+-- Apply with: npm run db:migrate  (or psql "$DATABASE_URL" -f db/schema.sql). Safe to re-run.
 
 CREATE TABLE IF NOT EXISTS licenses (
   id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),

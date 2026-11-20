@@ -7,12 +7,10 @@ export interface RenderedEmail {
 }
 
 /**
- * License email content, shared by the mock outbox and the Phase 2 Resend sender,
- * so the mock shows the copy buyers will get.
- *
- * TODO(phase2): Replace the HTML with the branded layout (paper background,
- * Newsreader heading, ink button). Keep the same three parts: key, download link,
- * activation steps.
+ * License email content, shared by the mock outbox and the Resend sender, so
+ * the mock shows the copy buyers get. Site palette (paper, ink) with web-safe
+ * fonts: email clients don't load Newsreader or Hanken Grotesk. No images, so
+ * nothing breaks when a client blocks them.
  */
 export function renderLicenseEmail({ key }: { key: string }): RenderedEmail {
   const restoreUrl = `${PRODUCTION_SITE_URL}/restore`;
@@ -43,7 +41,8 @@ export function renderLicenseEmail({ key }: { key: string }): RenderedEmail {
   const html = `<!doctype html>
 <html>
 <body style="margin:0;padding:24px;background:#f3f0ea;color:#1c1916;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;line-height:1.6;">
-  <div style="max-width:560px;margin:0 auto;background:#faf8f4;border-radius:12px;padding:32px;">
+  <p style="max-width:560px;margin:0 auto 12px;font-family:Georgia,serif;font-size:18px;font-weight:600;letter-spacing:-0.02em;">SpineSpy</p>
+  <div style="max-width:560px;margin:0 auto;background:#faf8f4;border:1px solid rgba(28,25,22,0.07);border-radius:12px;padding:32px;">
     <h1 style="margin:0 0 16px;font-family:Georgia,serif;font-size:26px;font-weight:600;">Thanks for buying SpineSpy</h1>
     <p style="margin:0 0 8px;">Your license key:</p>
     <p style="margin:0 0 24px;padding:16px;border:1px solid rgba(28,25,22,0.12);border-radius:8px;background:#fff;font-family:Menlo,Monaco,monospace;font-size:20px;font-weight:600;letter-spacing:1px;text-align:center;">${key}</p>

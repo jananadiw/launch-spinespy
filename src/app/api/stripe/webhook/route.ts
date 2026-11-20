@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { json } from "@/lib/license/http";
 import { handlePaymentEvent, parseWebhookEvent } from "@/lib/license/service";
-import { NotImplementedError, WebhookVerificationError } from "@/lib/license/types";
+import { ConfigError, WebhookVerificationError } from "@/lib/license/types";
 
 /**
  * Stripe webhook.
@@ -9,15 +9,13 @@ import { NotImplementedError, WebhookVerificationError } from "@/lib/license/typ
  *     -> createLicense, then sendLicenseEmail. Idempotent on the session id.
  *   charge.refunded (full refund) -> revokeLicense by payment intent.
  *
- * Mock mode: accepts unsigned Stripe-shaped JSON (dev only). Mock checkout
+ * Real mode verifies the Stripe signature on the raw body.
+ * Mock mode accepts unsigned Stripe-shaped JSON (dev only). Mock checkout
  * calls the same handlePaymentEvent directly, so both paths share fulfillment.
  *
- * TODO(phase2): Real signature check lives in lib/license/stripe/webhook.ts.
- *   This route already reads the raw body, which the check needs.
- * TODO(phase2): Decide whether charge.dispute.created should also revoke
- *   (the previous backend did). Add it to normalizeStripeEvent if so.
- * TODO(phase2): Confirm which refund events Stripe managed payments sends to
- *   this account, and that charge.payment_intent matches the session's.
+ * TODO: Disputes are not handled. With managed payments Stripe handles disputes
+ * itself; the docs don't say whether charge.dispute.created reaches this
+ * account. Check in the sandbox, then decide whether a lost dispute revokes.
  */
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
@@ -27,8 +25,9 @@ export async function POST(request: NextRequest) {
   try {
     event = await parseWebhookEvent(rawBody, signature);
   } catch (error) {
-    if (error instanceof NotImplementedError) {
-      return json({ error: "Webhook is not configured" }, 501);
+    if (error instanceof ConfigError) {
+      console.error("Webhook not configured:", error.message);
+      return json({ error: "Webhook is not configured" }, 500);
     }
     if (error instanceof WebhookVerificationError) {
       console.warn("Webhook rejected:", error.message);
