@@ -1,9 +1,14 @@
 /**
- * USE_MOCKS defaults to true until Phase 2 ships. Only the literal "false"
- * turns on the real Stripe, Postgres, and Resend providers.
+ * USE_MOCKS="true" or "false" always wins.
+ * Unset: mocks everywhere except Vercel Production, so the live site never
+ * shows a fake purchase. There, Buy fails with "Checkout is unavailable"
+ * until the Phase 2 providers ship.
  */
 export function isMockMode(): boolean {
-  return process.env.USE_MOCKS?.trim().toLowerCase() !== "false";
+  const value = process.env.USE_MOCKS?.trim().toLowerCase();
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return process.env.VERCEL_ENV !== "production";
 }
 
 /** The dev outbox page (/dev/emails) runs only with mocks, outside production builds. */

@@ -64,7 +64,7 @@ Purchase flow, license API for the Mac app, seed keys, and rate limits: [docs/li
 
 ## Deployment Checklist
 
-Do not deploy to production while `USE_MOCKS` is unset or `true`: the Buy button would show a fake purchase.
+Vercel Production defaults to real providers when `USE_MOCKS` is unset, so the live site never shows a fake purchase. Until Phase 2 ships, the live Buy button shows "Checkout is unavailable". Never set `USE_MOCKS=true` in Production.
 
 1. Phase 2 providers implemented and `USE_MOCKS=false` in Vercel
 2. Neon database provisioned and `db/schema.sql` applied

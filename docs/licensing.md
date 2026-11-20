@@ -15,7 +15,7 @@ Lost key: /restore ──POST /api/license/resend { email }──▶ same reply 
 Refund:   webhook charge.refunded (full) ──▶ revokeLicense by payment intent
 ```
 
-In mock mode (`USE_MOCKS=true`, the default for now), checkout skips Stripe. It runs the same fulfillment code with a fake paid session, then returns `/thanks?session_id=mock_…`. Mock emails appear at `/dev/emails` (dev builds only).
+In mock mode (`USE_MOCKS=true`; also the default when unset, except on Vercel Production), checkout skips Stripe. It runs the same fulfillment code with a fake paid session, then returns `/thanks?session_id=mock_…`. Mock emails appear at `/dev/emails` (dev builds only).
 
 ## Code layout
 
