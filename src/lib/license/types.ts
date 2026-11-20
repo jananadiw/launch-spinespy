@@ -1,5 +1,5 @@
 /**
- * Licensing domain types and the provider interfaces that Phase 2 implements.
+ * Licensing domain types and the provider interfaces.
  *
  * Mock and real providers implement the same interfaces. Route handlers and
  * pages only talk to `service.ts`, so swapping providers changes no flow or UI.
@@ -65,7 +65,7 @@ export type ActivateResult = "ok" | "limit_reached";
 
 /**
  * Persistence for licenses and activations.
- * Mock: in-memory. Phase 2: Postgres (Neon), see db/schema.sql.
+ * Mock: in-memory. Real: Postgres (Neon), see db/schema.sql.
  */
 export interface LicenseStore {
   findLicenseByKey(key: string): Promise<License | null>;
@@ -148,9 +148,10 @@ export class WebhookVerificationError extends Error {
   }
 }
 
-export class NotImplementedError extends Error {
-  constructor(what: string) {
-    super(`${what} is not implemented yet (Phase 2). Set USE_MOCKS=true.`);
-    this.name = "NotImplementedError";
+/** A required environment variable is missing in real mode. */
+export class ConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ConfigError";
   }
 }

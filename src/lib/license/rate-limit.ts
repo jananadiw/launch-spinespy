@@ -4,7 +4,7 @@
  * Limits are per server instance. On Vercel each warm function instance keeps
  * its own counts, so the real ceiling is limit × instances. Good enough to stop
  * casual key guessing and email spam.
- * TODO(phase2): Move to a shared store (e.g. Upstash Redis via Vercel Marketplace)
+ * TODO: Move to a shared store (e.g. Upstash Redis via Vercel Marketplace)
  * if abuse shows up.
  */
 

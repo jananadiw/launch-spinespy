@@ -1,11 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { json, limitByIp, NO_STORE_HEADERS, readEmail, readJsonObject, readString } from "@/lib/license/http";
 import { createCheckoutSession } from "@/lib/license/service";
-import { NotImplementedError } from "@/lib/license/types";
+import { ConfigError } from "@/lib/license/types";
 
 /**
  * POST { deviceId?, email? } -> { url }
- * The browser goes to `url`: Stripe Checkout in Phase 2, /thanks in mock mode.
+ * The browser goes to `url`: Stripe Checkout, or /thanks in mock mode.
  * Both fields are optional. The Mac app may send deviceId; the site sends {}.
  */
 export async function POST(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     return json({ url });
   } catch (error) {
     console.error("Checkout failed:", error);
-    const status = error instanceof NotImplementedError ? 503 : 500;
+    const status = error instanceof ConfigError ? 503 : 500;
     return json({ error: "Checkout is unavailable. Please try again later." }, status);
   }
 }

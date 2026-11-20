@@ -28,12 +28,12 @@ Everything lives in `src/lib/license/`. Routes import only `service.ts`.
 | `service.ts` | `core` bound to the providers that `USE_MOCKS` selects |
 | `providers.ts` | Picks mock or real providers |
 | `mock/*` | In-memory store with seed keys, console + outbox email, instant checkout, unsigned webhook |
-| `stripe/*`, `postgres/*`, `resend/*` | Phase 2 implementations (stubs with TODOs today) |
+| `stripe/*`, `postgres/*`, `resend/*` | Real providers: Checkout with managed payments, signed webhooks, Neon over HTTP, Resend |
 | `stripe/helpers.ts` | Stripe event → `PaymentEvent` mapping, site origin, refund check (implemented, tested) |
 | `email-template.ts` | License email copy, shared by the mock and Resend |
 | `rate-limit.ts`, `http.ts` | In-memory rate limits and request parsing for the routes |
 
-Phase 2 fills in the stub files and sets `USE_MOCKS=false`. Routes, pages, and `core.ts` stay the same.
+`USE_MOCKS=false` switches to the real providers. Routes, pages, and `core.ts` are the same in both modes.
 
 ## License API (Mac app)
 
