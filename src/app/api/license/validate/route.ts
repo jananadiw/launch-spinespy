@@ -1,75 +1,26 @@
-import { NextRequest, NextResponse } from "next/server";
-import { validateLicense } from "@/lib/license";
+import type { NextRequest } from "next/server";
+import { json, limitByIp, readJsonObject, readString } from "@/lib/license/http";
+import { normalizeLicenseKey } from "@/lib/license/key";
+import { validateLicense } from "@/lib/license/service";
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(identifier: string, limit = 20, windowMs = 60000): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(identifier);
-
-  if (!record || now > record.resetAt) {
-    rateLimitMap.set(identifier, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-
-  if (record.count >= limit) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
-
+/**
+ * POST { key, deviceId } -> { status: "active" | "revoked" | "invalid" | "not_activated" }
+ */
 export async function POST(request: NextRequest) {
-  const clientIp = request.headers.get("x-forwarded-for") || "unknown";
-  
-  if (!checkRateLimit(clientIp)) {
-    return NextResponse.json(
-      {
-        error: "Too many requests. Please try again later.",
-        code: "RATE_LIMIT_EXCEEDED",
-      },
-      { status: 429 }
-    );
-  }
+  const limited = limitByIp(request, "validate");
+  if (limited) return limited;
+
+  const body = await readJsonObject(request);
+  const deviceId = readString(body?.deviceId, 200);
+  if (!body || !deviceId) return json({ error: "deviceId is required" }, 400);
+
+  const key = normalizeLicenseKey(body.key);
+  if (!key) return json({ status: "invalid" });
 
   try {
-    const body = await request.json();
-    const { key, instance_id } = body;
-
-    if (!key || typeof key !== "string") {
-      return NextResponse.json(
-        { error: "License key is required", code: "MISSING_KEY" },
-        { status: 400 }
-      );
-    }
-
-    if (!instance_id || typeof instance_id !== "string") {
-      return NextResponse.json(
-        { error: "Instance ID is required", code: "MISSING_INSTANCE_ID" },
-        { status: 400 }
-      );
-    }
-
-    const result = await validateLicense(key, instance_id);
-
-    return NextResponse.json({
-      success: true,
-      status: result.status,
-      token: result.token,
-    });
+    return json({ status: await validateLicense({ key, deviceId }) });
   } catch (error) {
-    console.error("License validation error:", error);
-
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const statusCode = errorMessage.includes("not found") ? 404 : 500;
-
-    return NextResponse.json(
-      {
-        error: errorMessage,
-        code: errorMessage.includes("not found") ? "LICENSE_NOT_FOUND" : "VALIDATION_ERROR",
-      },
-      { status: statusCode }
-    );
+    console.error("License validate failed:", error);
+    return json({ error: "server_error" }, 500);
   }
 }

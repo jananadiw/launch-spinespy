@@ -9,7 +9,9 @@ export const SITE_DESCRIPTION =
 
 export const SPINESPY_PRICE_USD = 9.99;
 
+/** Direct .dmg download. No payment needed. NEXT_PUBLIC_DOWNLOAD_URL overrides the GitHub release. */
 export const DOWNLOAD_URL =
+  process.env.NEXT_PUBLIC_DOWNLOAD_URL?.trim() ||
   "https://github.com/jananadiw/launch-spinespy/releases/latest/download/SpineSpy.dmg";
 
 export const SOCIAL_IMAGE_PATH = "/images/posture-good.png";

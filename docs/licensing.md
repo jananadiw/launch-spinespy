@@ -1,230 +1,121 @@
-# SpineSpy Licensing System
+# SpineSpy licensing
 
-This document describes the SpineSpy licensing API and token format for macOS app integration.
+One-time purchase, $9.99 plus tax, up to 3 Macs. No trial, no accounts. The email entered at Stripe Checkout is the buyer's only identity. The license key goes out only by email; the website never shows it.
 
-## Overview
-
-- **License Model**: One-time purchase, up to 3 Macs per license
-- **Token Format**: Ed25519-signed JSON payload
-- **Token Lifetime**: 7 days (renewable)
-- **Offline Verification**: Tokens can be verified locally using the public key
-
-## API Endpoints
-
-Base URL: `https://www.spinespy.com/api/license`
-
-### 1. Activate License
-
-**Endpoint**: `POST /api/license/activate`
-
-**Request**:
-```json
-{
-  "key": "ABCDEF-123456-GHIJKL-789012",
-  "device_id_hash": "sha256_hash_of_device_identifier"
-}
-```
-
-**Success Response** (200):
-```json
-{
-  "success": true,
-  "instance_id": "inst_abc123def456ghi789jkl",
-  "token": "base64_signature.base64_payload"
-}
-```
-
-**Error Responses**:
-- `404 LICENSE_NOT_FOUND`: License key not found
-- `403 LICENSE_REVOKED`: License has been revoked
-- `409 MAX_ACTIVATIONS_REACHED`: License is already activated on 3 devices
-- `429 RATE_LIMIT_EXCEEDED`: Too many requests
-
-**Notes**:
-- If the same `device_id_hash` activates again, it returns the existing `instance_id`
-- The `device_id_hash` should be a SHA-256 hash of a stable device identifier (e.g., hardware UUID)
-- Do not send raw device identifiers or other personal data
-
-### 2. Validate License
-
-**Endpoint**: `POST /api/license/validate`
-
-**Request**:
-```json
-{
-  "key": "ABCDEF-123456-GHIJKL-789012",
-  "instance_id": "inst_abc123def456ghi789jkl"
-}
-```
-
-**Success Response** (200):
-```json
-{
-  "success": true,
-  "status": "active",
-  "token": "base64_signature.base64_payload"
-}
-```
-
-**Error Responses**:
-- `404 LICENSE_NOT_FOUND`: License or activation not found
-- `429 RATE_LIMIT_EXCEEDED`: Too many requests
-
-**Notes**:
-- Call this endpoint to refresh the token before it expires
-- Updates the `last_seen` timestamp for the activation
-
-### 3. Deactivate License
-
-**Endpoint**: `POST /api/license/deactivate`
-
-**Request**:
-```json
-{
-  "key": "ABCDEF-123456-GHIJKL-789012",
-  "instance_id": "inst_abc123def456ghi789jkl"
-}
-```
-
-**Success Response** (200):
-```json
-{
-  "success": true,
-  "message": "License deactivated successfully"
-}
-```
-
-**Error Responses**:
-- `429 RATE_LIMIT_EXCEEDED`: Too many requests
-
-**Notes**:
-- Frees up an activation slot for use on another device
-- Does not fail if the activation doesn't exist
-
-## Token Format
-
-Tokens are Ed25519-signed JSON payloads in the format:
+## Purchase flow
 
 ```
-base64(signature).base64(json_payload)
+Buy button ──POST /api/checkout──▶ { url } ──▶ Stripe Checkout ──▶ /thanks?session_id=…
+                                                     │
+                                                     └─ webhook: checkout.session.completed
+                                                          ├─ createLicense (idempotent on session id)
+                                                          └─ sendLicenseEmail (once per license)
+
+Lost key: /restore ──POST /api/license/resend { email }──▶ same reply whether or not the email exists
+Refund:   webhook charge.refunded (full) ──▶ revokeLicense by payment intent
 ```
 
-### Token Payload
+In mock mode (`USE_MOCKS=true`; also the default when unset, except on Vercel Production), checkout skips Stripe. It runs the same fulfillment code with a fake paid session, then returns `/thanks?session_id=mock_…`. Mock emails appear at `/dev/emails` (dev builds only).
+
+## Code layout
+
+Everything lives in `src/lib/license/`. Routes import only `service.ts`.
+
+| File | Role |
+|------|------|
+| `types.ts` | Domain types, the `LicenseStore`, `CheckoutProvider`, `EmailProvider`, `WebhookProvider` interfaces |
+| `core.ts` | Rules: idempotent fulfillment, 3-device limit, statuses, resend. Takes providers as an argument |
+| `service.ts` | `core` bound to the providers that `USE_MOCKS` selects |
+| `providers.ts` | Picks mock or real providers |
+| `mock/*` | In-memory store with seed keys, console + outbox email, instant checkout, unsigned webhook |
+| `stripe/*`, `postgres/*`, `resend/*` | Phase 2 implementations (stubs with TODOs today) |
+| `stripe/helpers.ts` | Stripe event → `PaymentEvent` mapping, site origin, refund check (implemented, tested) |
+| `email-template.ts` | License email copy, shared by the mock and Resend |
+| `rate-limit.ts`, `http.ts` | In-memory rate limits and request parsing for the routes |
+
+Phase 2 fills in the stub files and sets `USE_MOCKS=false`. Routes, pages, and `core.ts` stay the same.
+
+## License API (Mac app)
+
+Base URL: `https://www.spinespy.com/api/license`. All requests are `POST` with a JSON body. The contract is the same in mock and real modes.
+
+Domain results always come back as HTTP 200 with a `status` field. Keys are trimmed and uppercased before lookup.
+
+### `POST /activate`
 
 ```json
-{
-  "key": "ABCDEF-123456-GHIJKL-789012",
-  "instance_id": "inst_abc123def456ghi789jkl",
-  "status": "active",
-  "issued_at": 1699999999000,
-  "expires_at": 1700604799000
-}
+{ "key": "SPY-ABCD-EFGH-JKLM", "deviceId": "stable-device-id", "deviceName": "Studio MacBook Pro" }
 ```
 
-- `key`: The license key
-- `instance_id`: Unique identifier for this activation
-- `status`: License status (`active` or `revoked`)
-- `issued_at`: Unix timestamp in milliseconds when the token was issued
-- `expires_at`: Unix timestamp in milliseconds when the token expires (7 days from issue)
+Returns `{ "status": "ok" | "invalid" | "revoked" | "limit_reached" }`.
 
-### Offline Token Verification
+- At most 3 active devices per key.
+- Activating a device that is already active returns `ok` and updates its name.
+- `deviceName` is optional (defaults to `Mac`, max 100 characters).
 
-The macOS app can verify tokens offline using the Ed25519 public key.
-
-**Public Key**:
-```
-The LICENSE_SIGNING_PUBLIC_KEY will be provided separately and embedded in the app binary.
-```
-
-**Verification Steps**:
-
-1. Split the token on the `.` delimiter to get signature and payload
-2. Base64-decode both parts
-3. Verify the signature using `nacl.sign.detached.verify(message, signature, publicKey)`
-4. Parse the JSON payload
-5. Check that `expires_at > Date.now()`
-6. Check that `status === "active"`
-
-**Swift Example** (using TweetNacl or equivalent):
-```swift
-import TweetNacl
-
-func verifyLicenseToken(_ token: String) throws -> LicensePayload {
-    let parts = token.split(separator: ".")
-    guard parts.count == 2 else {
-        throw LicenseError.invalidFormat
-    }
-    
-    guard let signatureData = Data(base64Encoded: String(parts[0])),
-          let messageData = Data(base64Encoded: String(parts[1])) else {
-        throw LicenseError.invalidBase64
-    }
-    
-    let publicKey = Data(base64Encoded: LICENSE_SIGNING_PUBLIC_KEY)!
-    
-    let isValid = NaclSign.signDetachedVerify(
-        message: messageData,
-        sig: signatureData,
-        publicKey: publicKey
-    )
-    
-    guard isValid else {
-        throw LicenseError.invalidSignature
-    }
-    
-    let payload = try JSONDecoder().decode(LicensePayload.self, from: messageData)
-    
-    guard payload.expiresAt > Date().timeIntervalSince1970 * 1000 else {
-        throw LicenseError.expired
-    }
-    
-    guard payload.status == "active" else {
-        throw LicenseError.revoked
-    }
-    
-    return payload
-}
-```
-
-## Rate Limiting
-
-- **Activate**: 10 requests per minute per IP
-- **Validate**: 20 requests per minute per IP
-- **Deactivate**: 10 requests per minute per IP
-
-## Error Format
-
-All API errors follow this format:
+### `POST /deactivate`
 
 ```json
-{
-  "error": "Human-readable error message",
-  "code": "ERROR_CODE"
-}
+{ "key": "SPY-ABCD-EFGH-JKLM", "deviceId": "stable-device-id" }
 ```
 
-Common error codes:
-- `MISSING_KEY`: License key not provided
-- `MISSING_DEVICE_ID`: Device ID hash not provided
-- `MISSING_INSTANCE_ID`: Instance ID not provided
-- `LICENSE_NOT_FOUND`: License key not found
-- `LICENSE_REVOKED`: License has been revoked
-- `MAX_ACTIVATIONS_REACHED`: All activation slots are used
-- `RATE_LIMIT_EXCEEDED`: Too many requests
-- `ACTIVATION_ERROR`: Generic activation error
-- `VALIDATION_ERROR`: Generic validation error
-- `DEACTIVATION_ERROR`: Generic deactivation error
+Returns `{ "status": "ok" }`. Frees the slot. Unknown keys and devices also return `ok`.
 
-## Integration Recommendations
+### `POST /validate`
 
-1. **Store the token securely**: Use macOS Keychain to store the license key, instance_id, and token
-2. **Validate on startup**: Check the token on app launch
-3. **Refresh proactively**: Refresh the token when it has less than 24 hours remaining
-4. **Handle revocation gracefully**: If validation returns `revoked`, disable Pro features and show a message
-5. **Offline grace period**: Continue working for up to 7 days if the validation request fails due to network issues
-6. **Device ID**: Use `IOPlatformUUID` or similar stable hardware identifier, hashed with SHA-256
-7. **No PII**: Never send raw device identifiers, serial numbers, or other personal information
+```json
+{ "key": "SPY-ABCD-EFGH-JKLM", "deviceId": "stable-device-id" }
+```
 
-## Support
+Returns `{ "status": "active" | "revoked" | "invalid" | "not_activated" }`. `revoked` takes priority over `not_activated`. Each `active` result updates the device's `lastValidatedAt`.
 
-For licensing support or questions, contact: support@spinespy.com
+### `POST /resend` (website)
+
+```json
+{ "email": "buyer@example.com" }
+```
+
+Returns `{ "message": "If a purchase exists for this email, we've resent your key." }`. Resends every active key for that email. The reply and its timing are the same whether or not the email has a purchase.
+
+### Errors
+
+| HTTP | Body | When |
+|------|------|------|
+| 400 | `{ "error": "deviceId is required" }` | Missing or non-JSON body, missing `deviceId` (max 200 characters) |
+| 400 | `{ "error": "Enter a valid email address." }` | `/resend` with a bad email |
+| 429 | `{ "error": "rate_limited" }` + `Retry-After` | Over the rate limit |
+| 500 | `{ "error": "server_error" }` | Unexpected failure; retry later |
+
+### Rate limits (per IP, per server instance)
+
+| Endpoint | Limit |
+|----------|-------|
+| activate, deactivate | 10 / minute |
+| validate | 30 / minute |
+| resend | 5 / minute per IP, 3 / hour per email (over the email limit: same reply, no send) |
+| `/api/checkout` | 10 / minute |
+
+## Mock seed keys
+
+| Key | State |
+|-----|-------|
+| `SPY-TEST-0000-0001` | Valid, no devices |
+| `SPY-FULL-0000-0001` | Valid, already on 3 Macs (`seed-mac-1` … `seed-mac-3`) |
+| `SPY-REVK-0000-0001` | Revoked |
+
+All three belong to `seed@example.com`, so `/restore` with that email resends the two active keys.
+
+Mock state lives in server memory. It resets when the dev server restarts, and it is not shared across Vercel function instances.
+
+## Testing by hand (mock mode)
+
+```bash
+npm run dev
+curl -s localhost:3000/api/license/activate -H 'content-type: application/json' \
+  -d '{"key":"SPY-FULL-0000-0001","deviceId":"new-mac","deviceName":"New Mac"}'
+# {"status":"limit_reached"}
+
+# Refund a mock purchase (payment intent is pi_mock_<id> for session mock_<id>):
+curl -s localhost:3000/api/stripe/webhook -H 'content-type: application/json' \
+  -d '{"type":"charge.refunded","data":{"object":{"payment_intent":"pi_mock_<id>","refunded":true,"amount":999,"amount_refunded":999}}}'
+```

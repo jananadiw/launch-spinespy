@@ -1,91 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
-import { activateLicense } from "@/lib/license";
+import type { NextRequest } from "next/server";
+import { json, limitByIp, readJsonObject, readString } from "@/lib/license/http";
+import { normalizeLicenseKey } from "@/lib/license/key";
+import { activateLicense } from "@/lib/license/service";
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(identifier: string, limit = 10, windowMs = 60000): boolean {
-  const now = Date.now();
-  const record = rateLimitMap.get(identifier);
-
-  if (!record || now > record.resetAt) {
-    rateLimitMap.set(identifier, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-
-  if (record.count >= limit) {
-    return false;
-  }
-
-  record.count++;
-  return true;
-}
-
-function getClientIp(request: NextRequest): string {
-  const realIp = request.headers.get("x-real-ip")?.trim();
-  if (realIp) return realIp;
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0]?.trim() || "unknown";
-  }
-  return "unknown";
-}
-
+/**
+ * POST { key, deviceId, deviceName } -> { status: "ok" | "invalid" | "revoked" | "limit_reached" }
+ * Re-activating a device that is already active returns "ok".
+ */
 export async function POST(request: NextRequest) {
-  const clientIp = getClientIp(request);
-  
-  if (!checkRateLimit(clientIp)) {
-    return NextResponse.json(
-      {
-        error: "Too many requests. Please try again later.",
-        code: "RATE_LIMIT_EXCEEDED",
-      },
-      { status: 429 }
-    );
-  }
+  const limited = limitByIp(request, "activate");
+  if (limited) return limited;
+
+  const body = await readJsonObject(request);
+  const deviceId = readString(body?.deviceId, 200);
+  if (!body || !deviceId) return json({ error: "deviceId is required" }, 400);
+
+  const key = normalizeLicenseKey(body.key);
+  if (!key) return json({ status: "invalid" });
+
+  const deviceName = readString(body.deviceName, 100) ?? "Mac";
 
   try {
-    const body = await request.json();
-    const { key, device_id_hash } = body;
-
-    if (!key || typeof key !== "string") {
-      return NextResponse.json(
-        { error: "License key is required", code: "MISSING_KEY" },
-        { status: 400 }
-      );
-    }
-
-    if (!device_id_hash || typeof device_id_hash !== "string") {
-      return NextResponse.json(
-        { error: "Device ID hash is required", code: "MISSING_DEVICE_ID" },
-        { status: 400 }
-      );
-    }
-
-    const result = await activateLicense(key, device_id_hash);
-
-    return NextResponse.json({
-      success: true,
-      instance_id: result.instance_id,
-      token: result.token,
-    });
+    return json({ status: await activateLicense({ key, deviceId, deviceName }) });
   } catch (error) {
-    console.error("License activation error:", error);
-
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const statusCode = errorMessage.includes("not found") ? 404 
-      : errorMessage.includes("revoked") ? 403
-      : errorMessage.includes("already activated") ? 409
-      : 500;
-
-    return NextResponse.json(
-      {
-        error: errorMessage,
-        code: errorMessage.includes("not found") ? "LICENSE_NOT_FOUND"
-          : errorMessage.includes("revoked") ? "LICENSE_REVOKED"
-          : errorMessage.includes("already activated") ? "MAX_ACTIVATIONS_REACHED"
-          : "ACTIVATION_ERROR",
-      },
-      { status: statusCode }
-    );
+    console.error("License activate failed:", error);
+    return json({ error: "server_error" }, 500);
   }
 }

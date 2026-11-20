@@ -26,68 +26,27 @@ npm install
 
 ### 2. Set Up Environment Variables
 
-Copy `.env.example` to `.env.local` and fill in the required values:
-
 ```bash
 cp .env.example .env.local
 ```
 
-**Required Environment Variables**:
+`.env.example` lists every variable. With the default `USE_MOCKS=true`, none of the Stripe, Postgres, or Resend values are needed: checkout, licenses, and email are mocked in memory.
 
-- `NEXT_PUBLIC_SITE_URL` - Your site URL (e.g., `http://localhost:3000`)
-- `STRIPE_SECRET_KEY` - Stripe secret key
-- `STRIPE_WEBHOOK_SECRET` - Stripe webhook signing secret
-- `STRIPE_PRICE_ID` - Stripe price ID for the $9.99 product (sandbox: price_1UbTYAAZAvtzPdJvM78Ogexf)
-- `DATABASE_URL` - PostgreSQL connection string
-- `LICENSE_SIGNING_PRIVATE_KEY` - Ed25519 private key (base64)
-- `LICENSE_SIGNING_PUBLIC_KEY` - Ed25519 public key (base64)
-- `RESEND_API_KEY` - Resend API key for sending emails
-- `LICENSE_FROM_EMAIL` - From email address (e.g., `noreply@spinespy.com`)
-
-**Generate License Signing Keys**:
-
-```bash
-node -e "const nacl = require('tweetnacl'); const util = require('tweetnacl-util'); const keyPair = nacl.sign.keyPair(); console.log('PRIVATE:', util.encodeBase64(keyPair.secretKey)); console.log('PUBLIC:', util.encodeBase64(keyPair.publicKey));"
-```
-
-### 3. Set Up Database
-
-Run the schema migration on your Postgres database (Vercel Postgres or Neon):
-
-```bash
-psql $DATABASE_URL -f db/schema.sql
-```
-
-Or connect to your database and run the SQL in `db/schema.sql`.
-
-### 4. Configure Stripe
-
-1. Create a product in Stripe Dashboard
-2. Create a price for $9.99 USD
-3. Copy the price ID to `STRIPE_PRICE_ID` (sandbox: price_1UbTYAAZAvtzPdJvM78Ogexf)
-4. Enable automatic tax collection in Stripe Dashboard
-
-### 5. Set Up Webhook Endpoint
-
-For local testing, use the Stripe CLI:
-
-```bash
-stripe listen --forward-to localhost:3000/api/stripe/webhook
-```
-
-Copy the webhook signing secret from the CLI output to `STRIPE_WEBHOOK_SECRET`.
-
-For production, register your webhook endpoint in Stripe Dashboard:
-- URL: `https://www.spinespy.com/api/stripe/webhook`
-- Events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `charge.refunded`, `charge.dispute.created`
-
-### 6. Run Development Server
+### 3. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view.
+Open [http://localhost:3000](http://localhost:3000). Click **Buy SpineSpy** to run a mock purchase, then open [/dev/emails](http://localhost:3000/dev/emails) to see the license email.
+
+### Phase 2: real payments (`USE_MOCKS=false`)
+
+Not implemented yet. The stubs in `src/lib/license/{stripe,postgres,resend}/` list what each needs.
+
+1. Postgres: provision Neon from the Vercel Marketplace (sets `DATABASE_URL`), then `psql "$DATABASE_URL" -f db/schema.sql`.
+2. Stripe: sandbox keys, `STRIPE_PRICE_ID`, and a webhook for `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `charge.refunded` at `/api/stripe/webhook`. Locally: `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
+3. Resend: verify `spinespy.com`, set `RESEND_API_KEY` and `LICENSE_FROM_EMAIL=hello@spinespy.com`.
 
 ## Scripts
 
@@ -97,33 +56,18 @@ Open [http://localhost:3000](http://localhost:3000) to view.
 | `npm run build` | Build for production |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
+| `npm test` | Run unit tests (Vitest) |
 
-## Testing Checkout
+## Licensing
 
-Use Stripe test card: `4242 4242 4242 4242`
-- Any future expiration date
-- Any 3-digit CVC
-- Any ZIP code
-
-## License API
-
-The licensing system provides three endpoints for the macOS app:
-
-- `POST /api/license/activate` - Activate a license on a device
-- `POST /api/license/validate` - Validate and refresh a license token
-- `POST /api/license/deactivate` - Deactivate a license on a device
-
-See [docs/licensing.md](docs/licensing.md) for the complete API documentation and integration guide.
+Purchase flow, license API for the Mac app, seed keys, and rate limits: [docs/licensing.md](docs/licensing.md).
 
 ## Deployment Checklist
 
-Before deploying to production:
+Vercel Production defaults to real providers when `USE_MOCKS` is unset, so the live site never shows a fake purchase. Until Phase 2 ships, the live Buy button shows "Checkout is unavailable". Never set `USE_MOCKS=true` in Production.
 
-1. ✅ Set all environment variables in Vercel
-2. ✅ Provision Postgres database (Vercel Postgres or Neon)
-3. ✅ Run database migration
-4. ✅ Configure Stripe webhook endpoint
-5. ✅ Set up Resend domain and verify DNS
-6. ✅ Test checkout flow end-to-end
-7. ✅ Verify license email delivery
-8. ✅ Test license activation/validation/deactivation
+1. Phase 2 providers implemented and `USE_MOCKS=false` in Vercel
+2. Neon database provisioned and `db/schema.sql` applied
+3. Stripe webhook endpoint registered (`https://www.spinespy.com/api/stripe/webhook`)
+4. Resend domain verified
+5. End-to-end sandbox purchase: email arrives, key activates in the app, refund revokes it

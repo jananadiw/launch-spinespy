@@ -8,13 +8,12 @@ import {
   CreditCard,
   Download,
   Eye,
-  Play,
   Shield,
   Smartphone,
 } from "lucide-react";
 import Image from "next/image";
-import { CheckoutForm } from "@/components/checkout-form";
-import { DOWNLOAD_URL, SPINESPY_PRICE_USD } from "@/lib/site";
+import { BuyButton } from "@/components/buy-button";
+import { DOWNLOAD_URL, MAX_ACTIVATIONS, SPINESPY_PRICE_USD } from "@/lib/site";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 18 },
@@ -167,13 +166,10 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={fadeInUp} className="flex flex-wrap items-center justify-center gap-3 mb-6">
-              <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
-                <Download className="w-5 h-5" aria-hidden="true" />
-                Download for macOS
-              </a>
-              <a href="#demo" className="btn-secondary">
-                <Play className="w-4 h-4" aria-hidden="true" />
-                Watch demo
+              <BuyButton />
+              <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-secondary">
+                <Download className="w-4 h-4" aria-hidden="true" />
+                Download app
               </a>
             </motion.div>
 
@@ -347,13 +343,12 @@ export default function Home() {
                 <span className="mb-2 text-sm text-[var(--pricing-muted)]">USD · one time</span>
               </div>
 
-              <CheckoutForm
-                label="Get lifetime access"
-                formClassName="mt-6"
-                className="pricing-cta"
-              />
+              <div className="mt-6">
+                <BuyButton className="pricing-cta" errorClassName="text-[var(--pricing-muted)]" />
+              </div>
               <p className="mt-3 text-xs leading-relaxed text-[var(--pricing-muted)]">
-                Secure checkout via Stripe. Tax is calculated at checkout.
+                Secure checkout via Stripe. Tax is calculated at checkout. Your license key
+                arrives by email and works on up to {MAX_ACTIVATIONS} Macs.
               </p>
 
               <div className="mt-7 border-t border-white/15 pt-6">
@@ -377,6 +372,13 @@ export default function Home() {
                   className="font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
                 >
                   Download for macOS
+                </a>
+                {" · "}
+                <a
+                  href="/restore"
+                  className="font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+                >
+                  Resend my key
                 </a>
               </p>
             </div>
@@ -448,13 +450,10 @@ export default function Home() {
             Get lifetime access with a one-time purchase. Camera data stays on your Mac.
           </p>
           <div className="flex flex-wrap items-center gap-3 mb-4">
-            <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-primary">
-              <Download className="w-5 h-5" aria-hidden="true" />
-              Download for macOS
-            </a>
-            <a href="#demo" className="btn-secondary">
-              <Play className="w-4 h-4" aria-hidden="true" />
-              Watch demo
+            <BuyButton />
+            <a href={DOWNLOAD_URL} download="SpineSpy.dmg" className="btn-secondary">
+              <Download className="w-4 h-4" aria-hidden="true" />
+              Download app
             </a>
           </div>
           <p className="text-sm text-[var(--ink-muted)]">macOS 15+ · Apple Silicon</p>
