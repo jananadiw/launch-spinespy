@@ -147,8 +147,16 @@ h1, h2, h3, h4 {
   box-shadow: 0 24px 50px rgba(28, 25, 22, 0.1);
 }
 
+/* The window screenshot has transparent rounded corners, so the shadow follows its shape. */
 .hero-shot {
   max-width: 420px;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+
+.hero-shot img {
+  filter: drop-shadow(0 0 0.5px rgba(28, 25, 22, 0.35)) drop-shadow(0 24px 50px rgba(28, 25, 22, 0.12));
 }
 
 .product-frame img,
