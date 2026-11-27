@@ -188,10 +188,10 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.15 }}
           >
             <Image
-              src="/images/welcome.jpg"
+              src="/images/welcome.png"
               alt="Welcome to SpineSpy. Pick what you need help with, and how often it should check in."
-              width={894}
-              height={1024}
+              width={1120}
+              height={1276}
               priority
               className="block w-full h-auto"
             />
